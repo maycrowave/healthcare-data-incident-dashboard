@@ -73,7 +73,7 @@ def plot_vertical_bar_chart(
             elif annotate == "percentage":
                 label = f"{percentage:.1f}%"
             else:
-                label = f"{count:,}\n({percentage:.1f}%)"
+                label = f"{percentage:.1f}%"
             
             ax.text(
                 bar.get_x() + bar.get_width() / 2,
@@ -149,7 +149,7 @@ def plot_horizontal_stacked_crosstab(
         kind="barh",
         stacked=True,
         figsize=figsize,
-        color="plasma",
+        colormap="plasma",
         edgecolor="white",
         linewidth=0.5
     )
@@ -198,19 +198,20 @@ def plot_vertical_stacked_crosstab(
         kind="bar",
         stacked=True,
         figsize=figsize,
-        color="plasma",
+        colormap="plasma",
         edgecolor="white",
         linewidth=0.5
     )
-    ax.set_title(title, fontsize=12, fontweight="bold")
-    ax.set_xlabel(f"Proportion of {xlabel}", fontsize=10)
-    ax.set_ylabel(ylabel, fontsize=10)
-    ax.set_xticks(np.arange(0, 1.1, 0.1))
-    ax.set_xticklabels([f"{int(x*100)}%" for x in ax.get_xticks()])
-    ax.legend(title=ylabel, bbox_to_anchor=(1.05, 1), loc="upper left")
+    ax.set_title(title, fontsize=16, fontweight='bold')
+    ax.set_xlabel(ylabel, fontsize=14)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
+    ax.set_ylabel(xlabel, fontsize=14)
+    ax.set_yticks(np.arange(0, 1.1, 0.1))
+    ax.set_yticklabels([f"{int(x*100)}%" for x in np.arange(0, 1.1, 0.1)])
+    ax.legend(title=xlabel, bbox_to_anchor=(1.05, 1), loc="upper left")
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    ax.grid(True, axis="x", linestyle="--", alpha=0.5)
+    ax.grid(True, axis="y", linestyle="--", alpha=0.5)
     
     plt.tight_layout()
     plt.show()

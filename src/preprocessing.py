@@ -21,8 +21,8 @@ def load_processed_dataset(file_path: str = PROCESSED_DATA_PATH) -> pd.DataFrame
 
 def filter_to_health_sector(df_ico: pd.DataFrame) -> pd.DataFrame:
     """Filter the dataset to include only healthcare related incidents."""
-    df_health = df_ico[df_ico["sector"] == "Health"].copy(deep=True)
-    df_health = df_health.drop(columns=["sector"])
+    df_health = df_ico[df_ico["Sector"] == "Health"].copy(deep=True)
+    df_health = df_health.drop(columns=["Sector"])
     
     df_health.columns = (
         df_health.columns
