@@ -1,0 +1,71 @@
+{
+  "feature_columns": [
+    "incident_category",
+    "incident_type",
+    "no_data_subjects_affected",
+    "time_taken_to_report",
+    "data_subject_type__ Customers or prospective customers",
+    "data_subject_type__ Employees",
+    "data_subject_type__ Patients",
+    "data_subject_type__ Students",
+    "data_subject_type__ Subscribers",
+    "data_subject_type__ Users",
+    "data_subject_type__ Vulnerable adults",
+    "data_subject_type__Children",
+    "data_subject_type__Customers or prospective customers",
+    "data_subject_type__Employees",
+    "data_subject_type__Patients",
+    "data_subject_type__Students",
+    "data_subject_type__Subscribers",
+    "data_subject_type__Unknown",
+    "data_subject_type__Users",
+    "data_subject_type__Vulnerable adults",
+    "data_type__ Criminal convictions or offences",
+    "data_type__ Data revealing racial or ethnic origin",
+    "data_type__ Economic and financial data",
+    "data_type__ Gender Reassignment Data",
+    "data_type__ Genetic or biometric data",
+    "data_type__ Health data",
+    "data_type__ Identification data",
+    "data_type__ Location data",
+    "data_type__ Official documents",
+    "data_type__ Political opinions",
+    "data_type__ Religious or philosophical beliefs",
+    "data_type__ Sex life data",
+    "data_type__ Sexual orientation data",
+    "data_type__ Trade union membership",
+    "data_type__Basic personal identifiers",
+    "data_type__Criminal convictions or offences",
+    "data_type__Data revealing racial or ethnic origin",
+    "data_type__Economic and financial data",
+    "data_type__Gender Reassignment Data",
+    "data_type__Genetic or biometric data",
+    "data_type__Health data",
+    "data_type__Identification data",
+    "data_type__Location data",
+    "data_type__Official documents",
+    "data_type__Sex life data",
+    "data_type__Unknown"
+  ],
+  "cat_feature_indices": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "categorical_cols": [
+    "incident_category",
+    "incident_type",
+    "no_data_subjects_affected",
+    "time_taken_to_report"
+  ],
+  "multilabel_cols": [
+    "data_subject_type",
+    "data_type"
+  ],
+  "class_labels": [
+    "Informal Action Taken",
+    "Investigation Pursued",
+    "No Further Action"
+  ]
+}

@@ -49,7 +49,7 @@ def build_mlb_cat_matrix(df: pd.DataFrame, mlb_encoders: Dict[str, MultiLabelBin
     """Build the full encoded feature matrix by combining the multilabel and categorical encodings."""
     raw_categorical = df[categorical_cols].reset_index(drop=True)
     mlb_encoded = transform_mlb_columns(df, mlb_encoders, multilabel_cols).reset_index(drop=True)
-    feature_matrix = pd.concat([raw_categorical, mlb_encoded], axis=1)
+    feature_matrix = pd.concat([raw_categorical, mlb_encoded], axis=1).reset_index(drop=True)
     cat_feature_indices = [feature_matrix.columns.get_loc(col) for col in categorical_cols]
     
     return feature_matrix, cat_feature_indices
