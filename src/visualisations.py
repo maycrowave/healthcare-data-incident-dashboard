@@ -13,8 +13,8 @@ def get_original_feature(column_name: str, categorical_cols: Optional[List[str]]
     if "__" in column_name:
         return column_name.split("__")[0]
     if categorical_cols is not None:
-        for original_col in categorical_cols:
-            if column_name.startswith(original_col + "__"):
+        for original_col in sorted(categorical_cols, key=len, reverse=True):
+            if column_name.startswith(original_col + "_"):
                 return original_col
     return column_name
 

@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import Optional
 
 from src.constants import (
     ORIGINAL_DATA_PATH,
@@ -95,13 +96,12 @@ def aggregate_to_unique_breaches(df_health: pd.DataFrame) -> pd.DataFrame:
 def temporal_train_val_test_split(
     df: pd.DataFrame,
     test_year: int = TEST_YEAR,
-    val_year: int = VAL_YEAR,
-    val_quarters: list = VAL_QUARTERS,
+    val_year: Optional[int] = VAL_YEAR,
+    val_quarters: Optional[list] = VAL_QUARTERS,
     sort_chronologically: bool = True):
     """Split the dataset rows into training and testing sets based on the year."""
     
     df_test = df[df["year"] == test_year].copy()
-    
     val_mask = ((df["year"] == val_year) & (df["quarter"].isin(val_quarters)))
     df_val = df[val_mask].copy()
 

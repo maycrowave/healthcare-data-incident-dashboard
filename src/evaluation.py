@@ -198,15 +198,12 @@ def fit_random_forest_classifier(
     """Fit a RandomForestClassifier and evaluate it on the test set."""
     
     kwargs = DEFAULT_RF_HYPERPARAMS.copy()
-    if hyperparameters is not None:
-        kwargs.update(hyperparameters)
-    if class_weights is not None:
-        if class_weights == "balanced":
-            kwargs["class_weight"] = "balanced"
-        elif isinstance(class_weights, dict):   
-            kwargs["class_weight"] = class_weights
-    else:
+    if class_weights is None:
         kwargs["class_weight"] = None
+    elif class_weights in ("balanced", "Balanced"):
+        kwargs["class_weight"] = "balanced"
+    elif isinstance(class_weights, dict):
+        kwargs["class_weight"] = class_weights
     
     model = RandomForestClassifier(**kwargs)
     model.fit(X_train, y_train)

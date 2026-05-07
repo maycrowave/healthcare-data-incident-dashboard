@@ -11,7 +11,7 @@ def fit_mlb_encoder(df_train: pd.DataFrame, multilabel_cols: List[str] = MULTILA
     mlb_encoders = {}
     for col in multilabel_cols:
         mlb = MultiLabelBinarizer()
-        mlb.fit(df_train[col].str.split(","))
+        mlb.fit(df_train[col].str.split(", "))
         mlb_encoders[col] = mlb
         
     return mlb_encoders
@@ -20,7 +20,7 @@ def transform_mlb_columns(df: pd.DataFrame, mlb_encoders: Dict[str, MultiLabelBi
     """Transform the multilabel columns using the fitted MultiLabelBinarizer encoders."""
     encoded_dframes = []
     for col in multilabel_cols:
-        values_list = df[col].str.split(",")
+        values_list = df[col].str.split(", ")
         encoder = mlb_encoders[col]
         encoded_col = pd.DataFrame(
             encoder.transform(values_list),
