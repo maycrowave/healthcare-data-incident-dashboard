@@ -6,12 +6,16 @@ from sklearn.preprocessing import MultiLabelBinarizer, OneHotEncoder
 
 from src.constants import (MULTILABEL_COLS, CATEGORICAL_COLS, ARTIFACTS_PATH)
 
+def split_multilabel_values(series: pd.Series):
+    """Split mutli-valued features into lists for MultiLabelBinarizer."""
+    return series.fillna("").astype(str).apply(lambda value: [item.strip() for item in value.split(",")])
+
 def fit_mlb_encoder(df_train: pd.DataFrame, multilabel_cols: List[str] = MULTILABEL_COLS) -> Dict[str, MultiLabelBinarizer]:
     """Fit MultiLabelBinarizer encoders for the multilabel columns."""
     mlb_encoders = {}
     for col in multilabel_cols:
         mlb = MultiLabelBinarizer()
-        mlb.fit(df_train[col].str.split(", "))
+        mlb.fit(split_multilabel_values(df_train[col]))
         mlb_encoders[col] = mlb
         
     return mlb_encoders
@@ -20,7 +24,7 @@ def transform_mlb_columns(df: pd.DataFrame, mlb_encoders: Dict[str, MultiLabelBi
     """Transform the multilabel columns using the fitted MultiLabelBinarizer encoders."""
     encoded_dframes = []
     for col in multilabel_cols:
-        values_list = df[col].str.split(", ")
+        values_list = split_multilabel_values(df[col])
         encoder = mlb_encoders[col]
         encoded_col = pd.DataFrame(
             encoder.transform(values_list),

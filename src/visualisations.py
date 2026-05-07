@@ -322,7 +322,6 @@ def plot_cluster_distribution(
     decision_labels: pd.Series,
     class_labels: List[str] = CLASS_LABELS,
     title: str = "Decision Taken Distribution by Cluster",
-    overall_majority_rate: Optional[float] = None,
     figsize: Tuple[int, int] = (10, 6)
 ):
     df = pd.DataFrame({"cluster": cluster_labels, "decision_taken": decision_labels})
@@ -342,16 +341,6 @@ def plot_cluster_distribution(
     ax.set_xticklabels([f"Cluster {i}" for i in row_proportions.index], rotation=0)
     ax.legend(title="Decision Taken", bbox_to_anchor=(1.02, 1), loc="upper left", fontsize=9)
     ax.grid(True, axis="y", linestyle="--", alpha=0.5)
-    
-    if overall_majority_rate is not None:
-        ax.axhline(y=overall_majority_rate, color="red", linestyle=":", alpha=0.5)
-        ax.text(
-            len(row_proportions) - 0.5,
-            overall_majority_rate + 0.01,
-            f"Overall Majority Rate: ~{overall_majority_rate:.1%}",
-            ha="right",
-            fontsize=9
-        )
 
     plt.tight_layout()
     plt.show()

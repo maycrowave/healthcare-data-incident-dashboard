@@ -114,3 +114,41 @@ def temporal_train_val_test_split(
         df_test = df_test.sort_values(by=["year", "quarter"]).reset_index(drop=True)
     
     return df_train, df_val, df_test
+
+def preprocess_original_dataset(file_path: str = ORIGINAL_DATA_PATH) -> pd.DataFrame:
+    """Load and preprocess the original dataset, returning the final processed dataset."""
+    df_original = load_original_dataset(file_path)
+    df_health = filter_to_health_sector(df_original)
+    df_filtered = filter_to_timeframe(df_health)
+    df_dtyped = set_categorical_dtypes(df_filtered)
+    df_aggregated = aggregate_to_unique_breaches(df_dtyped)
+    return df_aggregated
+
+def validate_processed_dataset(df_processed: pd.DataFrame) -> None:
+    """Validate the processed dataset to ensure it meets expected criteria."""
+    required_cols = [
+        "year",
+        "quarter",
+        "data_subject_type",
+        "data_type",
+        "decision_taken",
+        "incident_category",
+        "incident_type",
+        "no_data_subjects_affected",
+        "time_taken_to_report"
+    ]
+    
+    missing_cols = [col for col in required_cols if col not in df_processed.columns]
+    if missing_cols:
+        raise ValueError(f"Processed dataset is missing the required column(s): {missing_cols}")
+    
+    missing_values = df_processed.isnull().sum()
+    missing_values = missing_values[missing_values > 0]
+    if not missing_values.empty:
+        raise ValueError(f"Processed dataset contains missing value(s):\n{missing_values}")
+    
+    if df_processed["decision_taken"].isin(EXCLUDED_DECISION_LABEL).any():
+        raise ValueError(f"Processed dataset contains the excluded decision labels: {EXCLUDED_DECISION_LABEL}")
+    
+    if df_processed.empty:
+        raise ValueError("Processed dataset is empty.")

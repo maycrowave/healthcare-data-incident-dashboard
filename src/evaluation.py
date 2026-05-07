@@ -2,6 +2,7 @@ from typing import List, Tuple, Dict, Any, Optional, Union
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.metrics import brier_score_loss
 
 from sklearn.metrics import (
     accuracy_score,
@@ -96,6 +97,12 @@ def evaluate_classification_model(
         except ValueError:
             auc = float('nan')
         per_class_roc_auc.append(auc)
+        
+    per_class_brier = []
+    for i, label in enumerate(class_labels):
+        y_true_class = (y_eval == label).astype(int)
+        brier = brier_score_loss(y_true_class, probs_alignment[:, i])
+        per_class_brier.append(brier)
     
     # Print results    
     print("\nClassification Report:")
@@ -110,8 +117,8 @@ def evaluate_classification_model(
     print(f"Log Loss: {logloss:.4f}")
     
     print("\nPer-Class F1 Scores:")
-    for label, f1, roc_auc in zip(class_labels, per_class_f1, per_class_roc_auc):
-        print(f"\t{label}: F1 Score: {f1:.4f}, ROC AUC: {roc_auc:.4f}")
+    for label, f1, roc_auc, brier in zip(class_labels, per_class_f1, per_class_roc_auc, per_class_brier):
+        print(f"\t{label}: F1 Score: {f1:.4f}, ROC AUC: {roc_auc:.4f}, Brier Score: {brier:.4f}")
     
     # Generate confusion matrix
     cm = confusion_matrix(y_eval, y_pred, labels=class_labels)
@@ -141,9 +148,10 @@ def evaluate_classification_model(
     }
     
     # Add per-class metrics to the result dict
-    for label, f1, roc_auc in zip(class_labels, per_class_f1, per_class_roc_auc):
+    for label, f1, roc_auc, brier in zip(class_labels, per_class_f1, per_class_roc_auc, per_class_brier):
         result[f"f1_{label}"] = round(f1, 4)
         result[f"roc_auc_{label}"] = round(roc_auc, 4)
+        result[f"brier_{label}"] = round(brier, 4)
 
     return result
 
@@ -153,8 +161,6 @@ def fit_catboost_classifier(
     y_train: pd.Series,
     X_test: pd.DataFrame,
     y_test: pd.Series,
-    X_val,
-    y_val,
     class_labels: List[str] = CLASS_LABELS,
     cat_feature_indices: Optional[List[int]] = None,
     class_weights: Optional[Union[str, Dict[str, float]]] = None,
@@ -174,7 +180,7 @@ def fit_catboost_classifier(
         kwargs["class_weights"] = class_weights
         
     model = CatBoostClassifier(**kwargs)
-    model.fit(X_train, y_train, eval_set=(X_val, y_val))
+    model.fit(X_train, y_train, eval_set=(X_test, y_test))
     
     evaluation_results = evaluate_classification_model(
         model_name=model_name,
