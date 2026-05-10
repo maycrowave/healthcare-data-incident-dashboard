@@ -8,7 +8,7 @@ from src.constants import (MULTILABEL_COLS, CATEGORICAL_COLS, ARTIFACTS_PATH)
 
 def split_multilabel_values(series: pd.Series):
     """Split mutli-valued features into lists for MultiLabelBinarizer."""
-    return series.fillna("").astype(str).apply(lambda value: [item.strip() for item in value.split(",")])
+    return series.astype(str).apply(lambda value: [item.strip() for item in value.split(", ")])
 
 def fit_mlb_encoder(df_train: pd.DataFrame, multilabel_cols: List[str] = MULTILABEL_COLS) -> Dict[str, MultiLabelBinarizer]:
     """Fit MultiLabelBinarizer encoders for the multilabel columns."""

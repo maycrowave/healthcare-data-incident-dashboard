@@ -1,18 +1,19 @@
 import sys
 sys.path.append("..")
 
+from dashboard.components.header import render_header
+from dashboard.components.disclaimer import render_disclaimer
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 from src.constants import (PROCESSED_DATA_PATH)
 
-st.title("UK Data Breach Incident Dashboard")
-
 st.set_page_config(
-    page_title="UK Data Breach Incident Dashboard",
-    page_icon=":bar_chart:",
+    page_title="UK Healthcare Data Breach Outcome Simulator",
+    page_icon=None,
     layout="wide",
-    initial_sidebar_state="auto",
+    initial_sidebar_state="expanded",
     menu_items={
         'Get Help': 'mailto:29172807@students.lincoln.ac.uk',
         'Report a bug': 'mailto:29172807@students.lincoln.ac.uk',
@@ -20,14 +21,35 @@ st.set_page_config(
     }
 )
 
-st.sidebar.success("Pages")
+def main () -> None:
+    st.title("UK Healthcare Data Breach Outcome Simulator")
+    
+    render_header(
+        title="UK Healthcare Data Breach Outcome Simulator",
+        subtitle=(
+            "Explore predicted regulatory outcomes for hypothetical UK healthcare "
+            "data breaches, using the Information Commissioner's Office (ICO) "
+            "Data Security Incident Trends dataset."
+        ),
+    )
+    render_disclaimer()
+    
+    st.markdown(
+        """
+        ### Where to go from here
 
-@st.cache_data
-def load_data():
-    data = pd.read_csv(PROCESSED_DATA_PATH)
-    return data
+        - **Simulator**: describe a hypothetical breach and see the predicted regulatory outcome and similar past breaches.
+        - **Explore**: browse the historical breach data the model is trained on.
+        - **About**: methodology, limitations, and the regulatory decision glossary.
+        """
+    )
+    
+    st.warning(
+        "**For exploratory and educational use only.** "
+        "This dashboard is a research artefact and is not validated for operational decision-making."
+        "Predictions are based on patterns in publicly reported, anonymised historical breaches and are not a substitute for professional regulatory or legal advice."
+    )
 
-data = load_data()
-st.subheader("Overview of Data Breach Incidents")
-st.write(data.head())
-
+    
+if __name__ == "__main__":
+    main()
