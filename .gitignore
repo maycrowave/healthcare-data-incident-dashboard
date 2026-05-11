@@ -1,4 +1,4 @@
-.vscode/settings.json
+.vscode
 notebooks/catboost_info
 src/__pycache__/evaluation.cpython-314.pyc
 src/__pycache__/visualisations.cpython-314.pyc
@@ -6,3 +6,8 @@ src/__pycache__/preprocessing.cpython-314.pyc
 src/__pycache__/encoders.cpython-314.pyc
 src/__pycache__/__init__.cpython-314.pyc
 src/__pycache__/constants.cpython-314.pyc
+dashboard/utils/__pycache__
+dashboard/components/__pycache__
+dashboard/__pycache__
+dashboard/utils/__pycache__/artefacts.cpython-314.pyc
+dashboard/utils/__pycache__/artefacts.cpython-314.pyc

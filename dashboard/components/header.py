@@ -6,7 +6,6 @@ from utils.constants import (
     DATA_SOURCE_NAME
 )
 
-
 def render_header(title: str, subtitle: str | None = None) -> None:
     """
     Render the page header.
@@ -20,10 +19,8 @@ def render_header(title: str, subtitle: str | None = None) -> None:
     if subtitle:
         st.markdown(subtitle)
 
-    # Freshness indicator, small caption rather than a banner, so it informs without dominating. Always visible above the fold.
     st.caption(
         f"Trained on {DATA_SOURCE_NAME} data, {TRAINING_DATA_RANGE}. "
         f"Dashboard last updated {DASHBOARD_LAST_UPDATED}."
     )
-
     st.divider()

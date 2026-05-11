@@ -7,9 +7,8 @@ import matplotlib.pyplot as plt
 
 from src.constants import CLASS_LABELS, COLOUR_PALETTE, PER_CLASS_COLOURS
 
-
 def get_original_feature(column_name: str, categorical_cols: Optional[List[str]] = None) -> str:
-    """Returns the original feature name from a potentially encoded column."""
+    """Returns the original feature name from a potentially encoded column"""
     if "__" in column_name:
         return column_name.split("__")[0]
     if categorical_cols is not None:
@@ -32,8 +31,9 @@ def plot_vertical_bar_chart(
     colour: List[str] = COLOUR_PALETTE,
     step: int = 100
 ) -> pd.DataFrame:
-    """Plots a vertical bar chart."""
-    
+    """Plots a vertical bar chart"""
+
+    # Sort the series by value or index as specified
     if sort_by == "value":
         series = series.sort_values(ascending=False)
     elif sort_by == "index":
@@ -46,6 +46,7 @@ def plot_vertical_bar_chart(
     
     fig, ax = plt.subplots(figsize=figsize)
     
+    # Handle both single colour and list of colours for bars
     if isinstance(colour, list):
         bar_colours = colour[:len(categories)]
     else:
@@ -62,7 +63,7 @@ def plot_vertical_bar_chart(
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-
+    # Set y-axis limit slightly above max count
     if counts.max() > 0:
         ax.set_ylim(0, counts.max() * 1.15)
     
@@ -96,7 +97,7 @@ def plot_pie_chart(
     colours: List[str] = COLOUR_PALETTE,
     total: Optional[int] = None
 ) -> pd.DataFrame:
-    """Plots a pie chart."""
+    """Plots a pie chart"""
     
     counts = series.values
     categories = series.index.astype(str)
@@ -132,8 +133,7 @@ def plot_horizontal_stacked_crosstab(
     sort_by_size: bool = True,
     show_table: bool = True
 ):
-    """Plots a horizontal stacked bar chart from a crosstab of two features."""
-    
+    """Plots a horizontal stacked bar chart from a crosstab of two features"""
     xlabel = xlabel if xlabel is not None else ("Column")
     ylabel = ylabel if ylabel is not None else ("Row") 
     
@@ -153,6 +153,7 @@ def plot_horizontal_stacked_crosstab(
         edgecolor="white",
         linewidth=0.5
     )
+    
     ax.set_title(title, fontsize=12, fontweight="bold")
     ax.set_xlabel(f"Proportion of {xlabel}", fontsize=10)
     ax.set_ylabel(ylabel, fontsize=10)
@@ -181,7 +182,7 @@ def plot_vertical_stacked_crosstab(
     sort_by_size: bool = True,
     show_table: bool = True
 ):
-    """Plots a vertical stacked bar chart from a crosstab of two features."""
+    """Plots a vertical stacked bar chart from a crosstab of two features"""
     
     xlabel = xlabel if xlabel is not None else ("Row")
     ylabel = ylabel if ylabel is not None else ("Column")
@@ -202,6 +203,7 @@ def plot_vertical_stacked_crosstab(
         edgecolor="white",
         linewidth=0.5
     )
+    
     ax.set_title(title, fontsize=16, fontweight='bold')
     ax.set_xlabel(ylabel, fontsize=14)
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
@@ -226,9 +228,9 @@ def plot_confusion_matrix(
     y_pred,
     class_labels: List[str] = CLASS_LABELS,
     title: str = "Confusion Matrix",
-    figsize: Tuple[int, int] = (8, 6),
+    figsize: Tuple[int, int] = (8, 6)
 ) -> None:
-    """Plots a confusion matrix."""
+    """Plots a confusion matrix"""
     
     cm = confusion_matrix(y_true, y_pred, labels=class_labels)
     fig, ax = plt.subplots(figsize=figsize)
@@ -250,9 +252,10 @@ def plot_feature_importance(
     top_n: Optional[int] = None,
     figsize: Tuple[int, int] = (10, 6)
 ) -> pd.DataFrame:
-    """Plots feature importances as a vertical bar chart."""
+    """Plots feature importances as a vertical bar chart"""
     importance_df = pd.DataFrame({"feature": feature_names, "importance": importances})
-    
+
+    # If grouping by original feature, sum importances of encoded features back to the original feature level
     if group_by_original_feature:
         importance_df["original_feature"] = importance_df["feature"].apply(lambda c: get_original_feature(c, categorical_cols))
         plot_df = importance_df.groupby("original_feature")["importance"].sum().sort_values(ascending=True)
@@ -282,11 +285,12 @@ def plot_calibration_curve(
     title: str = "Calibration Plots (per-class)",
     figsize: Tuple[int, int] = (20, 16)
 ) -> None:
-    """Plots calibration curves for each class."""
+    """Plots calibration curves for each class"""
     fig, axes = plt.subplots(1, len(class_labels), figsize=figsize)
     if len(class_labels) == 1:
         axes = [axes]
         
+    # Loop through each class and plot its calibration curve
     for i, (class_name, ax) in enumerate(zip(class_labels, axes)):
         y_true_binary = (y_true.values == class_name).astype(int)
         y_pred_prob = y_prob_aligned[:, i]
@@ -323,7 +327,9 @@ def plot_cluster_distribution(
     class_labels: List[str] = CLASS_LABELS,
     title: str = "Decision Taken Distribution by Cluster",
     figsize: Tuple[int, int] = (10, 6)
-):
+) -> pd.DataFrame:
+    """Plots the distribution of decision outcomes across clusters as a vertical stacked bar chart"""
+    
     df = pd.DataFrame({"cluster": cluster_labels, "decision_taken": decision_labels})
     row_proportions = pd.crosstab(df["cluster"], df["decision_taken"], normalize="index").reindex(columns=class_labels, fill_value=0)
     
@@ -335,6 +341,7 @@ def plot_cluster_distribution(
         color=PER_CLASS_COLOURS,
         edgecolor="white"
     )
+    
     ax.set_title(title, fontsize=12, fontweight="bold")
     ax.set_xlabel("Cluster", fontsize=10)
     ax.set_ylabel("Proportion of breaches (%)", fontsize=10)

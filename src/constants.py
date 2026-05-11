@@ -54,6 +54,11 @@ NO_DATA_SUBJECTS_AFFECTED_ORDER = [
     "Unknown"
 ]
 
+# Colour palette for charts/ graphs
 COLOUR_PALETTE = ["#f47d9b","#7be289","#f3dc4a","#8097e8","#e8a16e","#d585ed","#60e1e1"]
-PER_CLASS_COLOURS = ["#7db8c7", "#e07b6b", "#abc77d"]
+PER_CLASS_COLOURS = {
+    "Investigation Pursued": "#78ADED",
+    "Informal Action Taken": "#ADED78",
+    "No Further Action": "#ED78AD"
+}
 

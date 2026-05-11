@@ -22,8 +22,6 @@ st.set_page_config(
 )
 
 def main () -> None:
-    st.title("UK Healthcare Data Breach Outcome Simulator")
-    
     render_header(
         title="UK Healthcare Data Breach Outcome Simulator",
         subtitle=(
@@ -43,13 +41,6 @@ def main () -> None:
         - **About**: methodology, limitations, and the regulatory decision glossary.
         """
     )
-    
-    st.warning(
-        "**For exploratory and educational use only.** "
-        "This dashboard is a research artefact and is not validated for operational decision-making."
-        "Predictions are based on patterns in publicly reported, anonymised historical breaches and are not a substitute for professional regulatory or legal advice."
-    )
 
-    
 if __name__ == "__main__":
     main()
