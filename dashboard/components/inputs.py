@@ -9,17 +9,24 @@ _HELP_TEXT = {
         "Non Cyber covers human or process causes (misdirected post, lost paperwork)."
     ),
     "no_data_subjects_affected": (
-        "Approximate scale of the breach. Select 'Unknown' if the count is "
-        "genuinely unknown rather than guessing a band."
+        "Approximate scale of the breach. Select 'Unknown' if you don't know or aren't sure."
     ),
     "time_taken_to_report": (
-        "Under UK GDPR, controllers must notify the ICO within 72 hours of "
-        "becoming aware of a personal data breach where feasible."
+        "Under UK GDPR, controllers must notify the ICO within 72 hours of becoming aware of a personal data breach where possible."
     ),
+    "incident_type": (
+        "The ICO's taxonomy of incident types is quite granular. If you're not sure, select the one that seems closest or 'Other cyber/ non-cyber incident'."
+    ),
+    "data_subject_type": (
+        "The types of individuals affected by the breach. Select all that apply. Select 'Unknown' if you don't know or aren't sure."
+    ),
+    "data_type": (
+        "The types of personal data involved in the breach. Select all that apply. Select 'Unknown' if you don't know or aren't sure."
+    )
 }
 
 def _validate(inputs: Dict[str, object]) -> List[str]:
-    """Return a list of human-readable error messages, empty if all valid."""
+    """Return a list of human-readable error messages, empty if all are valid"""
     errors: List[str] = []
 
     if not inputs.get("data_subject_type"):
@@ -27,7 +34,7 @@ def _validate(inputs: Dict[str, object]) -> List[str]:
     if not inputs.get("data_type"):
         errors.append("Select at least one **Data Type**.")
 
-    # Single-selects use index=None to start empty, an unsubmitted single-select will return None, which we treat as missing.
+    # Single-selects use index=None to start empty, an unsubmitted single-select will return None which is treated as missing
     for field, label in [
         ("incident_category", "Incident Category"),
         ("incident_type", "Incident Type"),
@@ -42,10 +49,10 @@ def _validate(inputs: Dict[str, object]) -> List[str]:
 
 def render_input_form() -> Optional[Dict[str, object]]:
     """
-    Render the Simulator input form.
+    Render the Simulator input form
 
     Returns:
-        A dict of validated inputs if the user submitted and inputs are valid. Otherwise None.
+        A dict of validated inputs if the user submitted and inputs are valid, otherwise None
         Returned keys:
             incident_category: str
             incident_type: str
@@ -59,9 +66,7 @@ def render_input_form() -> Optional[Dict[str, object]]:
     with st.form(key="simulator_form", clear_on_submit=False):
         st.markdown("#### Describe the breach")
 
-        # Two-column layout for the six inputs
-        # Left column: what kind of incident
-        # Right column: who and what was affected, when, at what scale
+        # Two column layout for the six inputs
         col_left, col_right = st.columns(2)
 
         with col_left:
@@ -77,6 +82,7 @@ def render_input_form() -> Optional[Dict[str, object]]:
                 options=allowed["incident_type"],
                 index=None,
                 placeholder="Select an option",
+                help=_HELP_TEXT["incident_type"],
             )
             no_data_subjects_affected = st.selectbox(
                 "No. Data Subjects Affected",
@@ -91,17 +97,19 @@ def render_input_form() -> Optional[Dict[str, object]]:
                 "Data Subject Type",
                 options=allowed["data_subject_type"],
                 placeholder="Select one or more",
+                help=_HELP_TEXT["data_subject_type"],
             )
             data_type = st.multiselect(
                 "Data Type",
                 options=allowed["data_type"],
                 placeholder="Select one or more",
+                help=_HELP_TEXT["data_type"],
             )
             time_taken_to_report = st.selectbox(
                 "Time Taken to Report",
                 options=allowed["time_taken_to_report"],
                 index=None,
-                placeholder="Select a band",
+                placeholder="Select a time range",
                 help=_HELP_TEXT["time_taken_to_report"],
             )
 

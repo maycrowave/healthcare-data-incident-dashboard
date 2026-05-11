@@ -9,12 +9,12 @@ from catboost import CatBoostClassifier
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MultiLabelBinarizer, OneHotEncoder
 
-ARTIFACTS_PATH = Path(__file__).resolve().parents[2] / "artifacts"
-CLASSIFIER_PATH = ARTIFACTS_PATH / "classifier"
-CLUSTER_PATH = ARTIFACTS_PATH / "clustering"
+ARTEFACTS_PATH = Path(__file__).resolve().parents[2] / "artefacts"
+CLASSIFIER_PATH = ARTEFACTS_PATH / "classifier"
+CLUSTER_PATH = ARTEFACTS_PATH / "clustering"
 
 def _classifier_path(filename: str) -> Path:
-    """Return the absolute path to a classifier artefact file, raising if missing."""
+    """Return the absolute path to a classifier artefact file, raise if missing"""
     path = CLASSIFIER_PATH / filename
     if not path.exists():
         raise FileNotFoundError(
@@ -24,7 +24,7 @@ def _classifier_path(filename: str) -> Path:
     return path
 
 def _cluster_path(filename: str) -> Path:
-    """Return the absolute path to a clustering artefact file, raising if missing."""
+    """Return the absolute path to a clustering artefact file, raise if missing"""
     path = CLUSTER_PATH / filename
     if not path.exists():
         raise FileNotFoundError(
@@ -35,7 +35,7 @@ def _cluster_path(filename: str) -> Path:
 
 @st.cache_resource(show_spinner="Loading classifier model...")
 def load_classifier() -> CatBoostClassifier:
-    """Load the trained CatBoost classifier."""
+    """Load the trained CatBoost classifier"""
     model = CatBoostClassifier()
     model.load_model(str(_classifier_path("catboost_final.cbm")))
     return model
@@ -43,7 +43,7 @@ def load_classifier() -> CatBoostClassifier:
 
 @st.cache_resource(show_spinner="Loading clustering model...")
 def load_kmeans() -> KMeans:
-    """Load the trained KMeans clusterer."""
+    """Load the trained KMeans clusterer"""
     with open(_cluster_path("kmeans_final.pkl"), "rb") as f:
         return pickle.load(f)
 
@@ -51,11 +51,11 @@ def load_kmeans() -> KMeans:
 @st.cache_resource(show_spinner="Loading encoders...")
 def load_encoders() -> Tuple[Dict[str, MultiLabelBinarizer], OneHotEncoder]:
     """
-    Load the fitted encoders.
+    Load the fitted encoders
 
-    Returns a tuple of (mlb_encoders_by_column, ohe_encoder).
-    The MLB dict has one entry per multilabel column (data_subject_type, data_type).
-    The OHE encoder is only used by the KMeans pipeline, not the classifier.
+    Returns a tuple of (mlb_encoders_by_column, ohe_encoder)
+    The MLB dict has one entry per multilabel column (data_subject_type, data_type)
+    The OHE encoder is only used by the KMeans pipeline not the classifier
     """
     mlb_encoders: Dict[str, MultiLabelBinarizer] = {}
     for col in ("data_subject_type", "data_type"):
@@ -127,7 +127,7 @@ def load_kmeans_feature_metadata() -> Dict[str, Any]:
 
 @st.cache_data
 def load_kmeans_summary() -> Dict[str, Any]:
-    """Aggregate clustering metrics (k, silhouette, ARI, NMI)."""
+    """Aggregate clustering metrics (k, silhouette, ari, nmi)"""
     with open(_cluster_path("kmeans_summary.json")) as f:
         return json.load(f)
 
@@ -135,11 +135,11 @@ def load_kmeans_summary() -> Dict[str, Any]:
 @st.cache_data
 def load_processed_dataset() -> pd.DataFrame:
     """
-    Full processed dataset for the Explore screen.
+    Full processed dataset for the explore screen
 
-    Loaded from data/ rather than artifacts/ since this is the source data, not a model output.
+    Loaded from data/ rather than artefacts/ since this is source data, not a model output
     """
-    data_path = ARTIFACTS_PATH.parent / "data" / "new-data-security-incident-trends-health-sector.csv"
+    data_path = ARTEFACTS_PATH.parent / "data" / "new-data-security-incident-trends-health-sector.csv"
     if not data_path.exists():
         raise FileNotFoundError(f"Processed dataset not found: {data_path}")
     return pd.read_csv(data_path)

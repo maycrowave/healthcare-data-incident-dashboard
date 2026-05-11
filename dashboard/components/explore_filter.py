@@ -3,18 +3,17 @@ from typing import List, NamedTuple, Tuple
 import pandas as pd
 import streamlit as st
 
-
 class ExploreFilter(NamedTuple):
-    """The current filter state."""
+    """The current filter state"""
     years: List[int]
     quarters: List[str]
 
 
 def render_filter(df: pd.DataFrame) -> ExploreFilter:
     """
-    Render the year/quarter filter and return the selection.
+    Render the year/ quarter filter and return the selection
 
-    Defaults to all years and all quarters selected.
+    Defaults to all years and all quarters selected
     """
     all_years = sorted(df["year"].unique().tolist())
     all_quarters = sorted(df["quarter"].unique().tolist())
@@ -43,7 +42,7 @@ def render_filter(df: pd.DataFrame) -> ExploreFilter:
 
 
 def apply_filter(df: pd.DataFrame, selection: ExploreFilter) -> pd.DataFrame:
-    """Apply the filter selection to a dataframe."""
+    """Apply the filter selection to a dataframe"""
     return df[
         df["year"].isin(selection.years)
         & df["quarter"].isin(selection.quarters)

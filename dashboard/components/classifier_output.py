@@ -1,39 +1,38 @@
 from typing import Dict, List
 import streamlit as st
 from components.charts import horizontal_probability_bar
-from utils.artefacts import (
-    load_baseline_probabilities,
-    load_classifier_results,
-)
+from utils.artefacts import load_classifier_results,  load_classifier_results, load_baseline_probabilities
+
+
 from utils.inference import InferenceError, predict_classifier_probabilities
 from utils.interpretation import (
     CalibrationTier,
     calibration_tiers_from_results,
-    likelihood_label,
+    likelihood_label
 )
 
 _DISPLAY_ORDER: List[str] = [
     "Investigation Pursued",
     "Informal Action Taken",
-    "No Further Action",
+    "No Further Action"
 ]
 
 _TIER_BADGE_COLOUR: Dict[str, str] = {
-    "high": "green",
-    "moderate": "blue",
-    "low": "orange",
-    "limited": "grey",
+    "high": "#aded78",
+    "moderate": "#78aded",
+    "low": "#edae78",
+    "limited": "#b1b1b1"
 }
 
 def _render_reliability_badge(tier: CalibrationTier) -> None:
-    """Render the reliability badge using Streamlit's coloured badge syntax."""
+    """Render the reliability badge using streamlit coloured badge syntax"""
     colour = _TIER_BADGE_COLOUR.get(tier.tier, "grey")
     st.markdown(f":{colour}-badge[{tier.label}]")
 
 
 def _render_class_row(class_label: str, probability: float, baseline: float, tier: CalibrationTier) -> None:
-    """Render a single class's row in the panel."""
-    # Header line: class name on the left, reliability badge on the right.
+    """Render a single class's row in the panel"""
+    # Header line= class name on the left, reliability badge on the right
     header_left, header_right = st.columns([3, 1])
     with header_left:
         st.markdown(f"**{class_label}**")
@@ -57,16 +56,16 @@ def _render_class_row(class_label: str, probability: float, baseline: float, tie
         config={"displayModeBar": False}
     )
 
-    # Inline reliability explanation. Always visible (not in expander) so the user encounters it without an extra click — matches Lesson 7.
+    # Inline reliability explanation, always visible (not in expander) so the user encounters it without an extra click
     st.caption(tier.explanation)
 
 
 def render_classifier_panel(inputs: Dict[str, object]) -> None:
     """
-    Render the full classifier output panel.
+    Render the full classifier output panel
 
     Args:
-        inputs: The validated input dict from render_input_form.
+        inputs: the validated input dict from render_input_form
     """
     try: 
         with st.spinner("Generating prediction..."):
@@ -85,8 +84,7 @@ def render_classifier_panel(inputs: Dict[str, object]) -> None:
 
     st.subheader("Predicted regulatory outcome")
     st.caption(
-        "Predicted probability for each outcome based on the breach you described, "
-        "compared to the historical baseline rate (vertical tick) for that outcome."
+        "Predicted probability for each outcome based on the breach you described, compared to the historical baseline rate (vertical line) for that outcome."
     )
 
     for class_label in _DISPLAY_ORDER:

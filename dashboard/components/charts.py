@@ -283,7 +283,7 @@ def time_trend_counts(
     """
     Line chart: breach counts per quarter, one line per decision outcome
     """
-    # Counts per (quarter, class) reindexed to make sure all classes and quarters are present
+    # Counts per quarter, class reindexed to make sure all classes and quarters are present
     counts = (
         df.groupby([period_col, target_col]).size()
         .unstack(target_col)
@@ -330,7 +330,7 @@ def time_trend_proportions(
     """
     Line chart: per quarter share of each decision outcome, sums to 100% within each quarter, one line per outcome
     """
-    # Counts per (quarter, class) reindexed to make sure all classes and quarters are present
+    # Counts per quarter, class reindexed to make sure all classes and quarters are present
     counts = (
         df.groupby([period_col, target_col]).size()
         .unstack(target_col)

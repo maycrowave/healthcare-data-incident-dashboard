@@ -8,11 +8,11 @@ from utils.constants import (
 
 def render_header(title: str, subtitle: str | None = None) -> None:
     """
-    Render the page header.
+    Render the page header
 
     Args:
-        title: The page's primary heading.
-        subtitle: Optional one-sentence description shown below the title.
+        title: the page primary heading
+        subtitle: optional sentence description shown below the title
     """
     st.title(title)
 

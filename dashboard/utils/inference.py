@@ -8,17 +8,16 @@ from utils.artefacts import (
     load_classifier_feature_metadata,
     load_encoders,
     load_kmeans,
-    load_kmeans_feature_metadata,
+    load_kmeans_feature_metadata
 )
 
 class InferenceError(Exception):
-    """Raised when classifier or cluster inference fails for any reason."""
+    """Raised when classifier or cluster inference fails for any form of reason"""
 
 
 def _wrap_errors(operation: str):
     """
-    Decorator to wrap inference functions, converting any unexpected
-    error into a typed InferenceError with a user-friendly message.
+    Decorator to wrap inference functions and converts any unexpected error into a typed inference error with a message
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -27,14 +26,12 @@ def _wrap_errors(operation: str):
             except FileNotFoundError as e:
                 raise InferenceError(
                     f"Could not load required model files for {operation}. "
-                    f"The dashboard's model artefacts may be missing or corrupt. "
                     f"Details: {e}"
                 ) from e
             except (ValueError, KeyError) as e:
                 raise InferenceError(
                     f"Could not run {operation} on the input you provided. "
-                    f"This may indicate a mismatch between your input and "
-                    f"the values the model was trained on. Details: {e}"
+                    f"Details: {e}"
                 ) from e
             except Exception as e:
                 raise InferenceError(
@@ -46,9 +43,9 @@ def _wrap_errors(operation: str):
 
 def _build_classifier_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
     """
-    Build a single-row DataFrame in the exact column order the CatBoost classifier was trained on.
+    Build a single-row dataframe in the exact column order the CatBoost classifier was trained on
     
-    The column order is read from classifier_feature_metadata.json (feature_columns) rather than reconstructed, so this stays correct even if the upstream encoder vocabulary changes.
+    The column order is read from classifier_feature_metadata.json (feature_columns) rather than reconstructed here so this stays correct even if vocab does change in future
     """
     metadata = load_classifier_feature_metadata()
     mlb_encoders, _ = load_encoders()
@@ -56,95 +53,89 @@ def _build_classifier_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
     categorical_cols: List[str] = metadata["categorical_cols"]
     multilabel_cols: List[str] = metadata["multilabel_cols"]
 
-    # Build the multi-label binarised columns. MLB.transform expects a list of lists (one inner list of selected labels per row).
+    # Build the multi-label binarised columns
     mlb_columns: Dict[str, int] = {}
     for col in multilabel_cols:
         encoder = mlb_encoders[col]
         selected_labels: List[str] = list(inputs.get(col) or [])
-        # Single row, wrap in a list-of-lists for transform()
+        # Single row wrapped in a list of lists for transform
         encoded = encoder.transform([selected_labels])[0]
-        for cls, value in zip(encoder.classes_, encoded):
-            mlb_columns[f"{col}__{cls}"] = int(value)
+        for c, value in zip(encoder.classes_, encoded):
+            mlb_columns[f"{col}__{c}"] = int(value)
 
     # Build the raw categorical columns (CatBoost handles these natively).
     categorical_columns: Dict[str, str] = {
         col: str(inputs[col]) for col in categorical_cols
     }
 
-    # Combine and reindex to the trained column order. Any column missing from this row would raise here, which is the right failure mode.
+    # Combine and reindex to the trained column order, any column missing from this row would raise here
     row_data: Dict[str, object] = {**mlb_columns, **categorical_columns}
     feature_row = pd.DataFrame([row_data])
 
-    missing = set(feature_columns) - set(feature_row.columns)
+    missing = set(feature_columns)-set(feature_row.columns)
     if missing:
-        raise ValueError(
-            f"Feature row is missing expected columns: {sorted(missing)}"
-        )
-
+        raise ValueError(f"Feature row is missing expected the columns: {sorted(missing)}")
     return feature_row[feature_columns]
 
 @_wrap_errors("classifier prediction")
 def predict_classifier_probabilities(inputs: Dict[str, object]) -> Dict[str, float]:
     """
-    Run the classifier on a single user input and return per-class probabilities keyed by class label.
+    Run the classifier on a single user input and return per-class probabilities keyed by class label
 
     Returns:
-        Dict mapping class label (e.g. "Informal Action Taken") to its
-        predicted probability in [0, 1]. Probabilities sum to ~1.0.
+        Dict mapping target class label to its predicted probability in between [0, 1] (probabilities for all classes should sum to 1)
     """
     model = load_classifier()
     feature_row = _build_classifier_feature_row(inputs)
 
-    # CatBoost returns shape (1, n_classes), take the single row.
+    # CatBoost returns the shape 1, n_classes so take the single row
     probs = model.predict_proba(feature_row)[0]
 
-    # model.classes_ may be a numpy array of dtype object.
-    # Coerce to str to keep keys consistent with the JSON-loaded class labels elsewhere.
+    # str to keep keys consistent with the labels loaded from json
     class_labels = [str(label) for label in model.classes_]
-
     return {label: float(p) for label, p in zip(class_labels, probs)}
 
 def _build_kmeans_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
     """
-    Build a single-row DataFrame in the column order the KMeans clusterer
-    was trained on (MLB + OHE representation).
+    Build a single row dataframe in the column order the kmeans cluster model was trained on (MLB + OHE)
 
-    Different from _build_classifier_feature_row: KMeans was trained on the
-    one-hot encoded categorical columns, not the native categorical ones.
+    Different from build classifier feature row: kmeans was trained on the one-hot encoded categorical columns not the native categorical ones
     """
+    # Load the metadata and required encoders for the kmeans features
     metadata = load_kmeans_feature_metadata()
     mlb_encoders, ohe_encoder = load_encoders()
     feature_columns: List[str] = metadata["feature_columns_order"]
     categorical_cols: List[str] = metadata["categorical_columns"]
     multilabel_cols: List[str] = metadata["multilabel_columns"]
 
-    # Multi-label binarised columns (same as classifier path).
+    # Multi-label binarised columns (same as classifier path)
     mlb_columns: Dict[str, int] = {}
     for col in multilabel_cols:
         encoder = mlb_encoders[col]
         selected_labels: List[str] = list(inputs.get(col) or [])
         encoded = encoder.transform([selected_labels])[0]
-        for cls, value in zip(encoder.classes_, encoded):
-            mlb_columns[f"{col}__{cls}"] = int(value)
+        for c, value in zip(encoder.classes_, encoded):
+            mlb_columns[f"{col}__{c}"] = int(value)
 
-    # One-hot encoded categorical columns (different from classifier path).
-    # OHE expects a 2D array-like with named columns, so we build a one-row
-    # DataFrame in the order the OHE was fit on.
+    # One-hot encoded categorical columns (different from classifier path)
+    # dataframe in the order the OHE was fit on
     cat_row = pd.DataFrame([{col: str(inputs[col]) for col in categorical_cols}])
     ohe_array = ohe_encoder.transform(cat_row[categorical_cols])
     ohe_column_names = ohe_encoder.get_feature_names_out(categorical_cols)
     ohe_columns: Dict[str, int] = {
-        name: int(value) for name, value in zip(ohe_column_names, ohe_array[0])
+        name: int(value) for name,
+        value in zip(ohe_column_names,
+        ohe_array[0])
     }
 
-    # Combine and reindex to the trained column order.
+    # Combine and reindex to the trained column order
     row_data: Dict[str, object] = {**mlb_columns, **ohe_columns}
     feature_row = pd.DataFrame([row_data])
 
-    missing = set(feature_columns) - set(feature_row.columns)
+    missing = set(feature_columns)-set(feature_row.columns)
     if missing:
         raise ValueError(
-            f"KMeans feature row is missing expected columns: {sorted(missing)}"
+            f"K-Means feature row is missing expected columns: {sorted(missing)}"
         )
 
     return feature_row[feature_columns]
@@ -152,11 +143,10 @@ def _build_kmeans_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
 @_wrap_errors("cluster assignment")
 def predict_cluster(inputs: Dict[str, object]) -> int:
     """
-    Run the KMeans clusterer on a single user input and return the cluster
-    index the breach is assigned to.
+    Run the kmeans cluster model on a single user input and return the cluster index the breach is assigned to
 
     Returns:
-        Integer cluster index in [0, k).
+        Integer cluster index [0, k-1]
     """
     model = load_kmeans()
     feature_row = _build_kmeans_feature_row(inputs)

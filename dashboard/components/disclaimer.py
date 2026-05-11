@@ -7,5 +7,5 @@ DISCLAIMER_TEXT = (
 )
 
 def render_disclaimer() -> None:
-    """Render the standard non-operational-use disclaimer."""
+    """Render the standard non-operational-use disclaimer"""
     st.warning(DISCLAIMER_TEXT)

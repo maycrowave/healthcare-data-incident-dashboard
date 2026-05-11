@@ -1,5 +1,4 @@
 from time import time
-
 import streamlit as st
 
 from dashboard.components import inputs
@@ -17,24 +16,19 @@ def main() -> None:
     render_header(
         title="Simulator",
         subtitle=(
-            "Describe a hypothetical breach to see the predicted regulatory "
-            "outcome and similar past breaches."
+            "Describe a hypothetical breach to see the predicted regulatory decision taken and similar past breaches."
         ),
     )
     render_disclaimer()
 
     inputs = render_input_form()
-    
-    import time
-
+    # Start timer after users input is submitted for testing purposes later
     if inputs is not None:
-        t0 = time.perf_counter()
-
+        time_start = time.perf_counter()
+        
     if inputs is None:
         st.info(
-            "Fill in all six fields above and click **Simulate outcome** "
-            "to see predicted probabilities, historical baselines, and "
-            "similar past breaches."
+            "Fill in all six fields above and click **Simulate outcome** to see predicted probabilities, historical baselines and similar past breaches."
         )
         return
 
@@ -42,8 +36,8 @@ def main() -> None:
     render_cluster_panel(inputs)
     render_output_footer()
     
-    elapsed = time.perf_counter() - t0
-    st.caption(f"Inference + render: {elapsed*1000:.0f}ms")
+    time_elapsed = time.perf_counter() - time_start
+    st.caption(f"Inference + Render: {time_elapsed*1000:.0f}ms")
 
 if __name__ == "__main__":
     main()
