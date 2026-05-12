@@ -51,16 +51,6 @@ def _validate(inputs_dict: Dict[str, object]) -> List[str]:
 def render_input_form() -> Optional[Dict[str, object]]:
     """
     Render the Simulator input form
-
-    Returns:
-        A dict of validated inputs if the user submitted and inputs are valid, otherwise None
-        Returned keys:
-            incident_category: str
-            incident_type: str
-            data_subject_type: List[str]
-            data_type: List[str]
-            no_data_subjects_affected: str
-            time_taken_to_report: str
     """
     allowed = load_allowed_values()
 

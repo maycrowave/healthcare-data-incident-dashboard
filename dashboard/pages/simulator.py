@@ -13,10 +13,9 @@ def main() -> None:
         title="Simulator",
         subtitle=(
             "Describe a hypothetical breach to see the predicted regulatory decision taken and similar past breaches."
-        ),
+        )
     )
     render_disclaimer()
-    
 
     inputs = render_input_form()
     if inputs is None:

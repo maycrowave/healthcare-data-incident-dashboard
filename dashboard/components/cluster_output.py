@@ -1,33 +1,13 @@
 from typing import Dict, List
 import streamlit as st
 from components.charts import horizontal_stacked_proportions
-from dashboard.utils.constants import DECISION_DISPLAY_ORDER
+from utils.constants import DECISION_DISPLAY_ORDER, _DESCRIPTION_FEATURES, _FEATURE_LABELS
 from utils.artefacts import load_cluster_characteristics
 from utils.inference import InferenceError, predict_cluster
-
-# Map raw feature column names to user-facing labels, so the description reads as natural prose rather than column names
-_FEATURE_LABELS: Dict[str, str] = {
-    "incident_category": "incident category",
-    "incident_type": "incident type",
-    "data_subject_type": "data subjects",
-    "data_type": "data types",
-    "no_data_subjects_affected": "scale",
-    "time_taken_to_report": "reporting time"
-}
-
-# Features prioritised in the description in order
-# Surface the three most distinctive ones rather than all six to keep the description short
-_DESCRIPTION_FEATURES: List[str] = [
-    "incident_category",
-    "incident_type",
-    "no_data_subjects_affected",
-    "time_taken_to_report"
-]
 
 def _describe_cluster(cluster_data: Dict) -> str:
     """
     Build a short  description of a cluster from its dominant feature values
-
     Picks the top value for each of the three most distinctive features and renders them as a sentence
     """
     top_features = cluster_data.get("top_features", {})
@@ -38,7 +18,7 @@ def _describe_cluster(cluster_data: Dict) -> str:
         if not feature_data:
             continue
 
-        # Take the highest % value
+        # Take the highest percent value
         top_value = max(feature_data.items(), key=lambda kv: kv[1])
         value, percentage = top_value
         label = _FEATURE_LABELS.get(feature, feature)
@@ -46,16 +26,12 @@ def _describe_cluster(cluster_data: Dict) -> str:
 
     if not parts:
         return "Detailed cluster characteristics unavailable."
-
     return "In this group of similar past breaches: " + "; ".join(parts) + "."
 
 
 def render_cluster_panel(inputs: Dict[str, object]) -> None:
     """
     Render the cluster context panel
-
-    Args:
-        inputs: the validated input dict from render_input_form
     """
     try:
         with st.spinner("Finding similar past breaches..."):
@@ -91,7 +67,7 @@ def render_cluster_panel(inputs: Dict[str, object]) -> None:
             percent = cluster_data.get("percentage_of_dataset", 0.0)
             st.markdown(
                 f"<div style='text-align: right; color: var(--text-color); opacity: 0.7;'>"
-                f"{size:,} breaches · {percent:.1f}% of dataset"
+                f"{size:,} breaches ({percent:.1f}% of dataset)"
                 f"</div>",
                 unsafe_allow_html=True
             )

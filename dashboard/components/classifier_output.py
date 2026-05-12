@@ -3,20 +3,13 @@ import streamlit as st
 from components.charts import horizontal_probability_bar
 from utils.artefacts import  load_classifier_results, load_baseline_probabilities
 
-from utils.constants import DECISION_DISPLAY_ORDER
+from utils.constants import DECISION_DISPLAY_ORDER, _TIER_BADGE_COLOUR
 from utils.inference import InferenceError, predict_classifier_probabilities
 from utils.interpretation import (
     CalibrationTier,
     calibration_tiers_from_results,
     likelihood_label
 )
-
-_TIER_BADGE_COLOUR: Dict[str, str] = {
-    "high": "green",
-    "moderate": "blue",
-    "low": "orange",
-    "limited": "red"
-}
 
 def _render_reliability_badge(tier: CalibrationTier) -> None:
     """Render the reliability badge using streamlit coloured badge syntax"""
@@ -37,13 +30,13 @@ def _render_class_row(class_label: str, probability: float, baseline: float, tie
     label = likelihood_label(probability)
     st.markdown(
         f"<span style='color: var(--text-color); opacity: 0.7;'>"
-        f"{label} · {probability:.1%}"
+        f"{label} ({probability:.1%})"
         f"</span>",
         unsafe_allow_html=True
     )
 
     # The bar itself
-    fig = horizontal_probability_bar(probability=probability, baseline=baseline)
+    fig = horizontal_probability_bar(probability=probability, baseline=baseline, height=100)
     st.plotly_chart(
         fig,
         width='stretch',
@@ -57,9 +50,6 @@ def _render_class_row(class_label: str, probability: float, baseline: float, tie
 def render_classifier_panel(inputs: Dict[str, object]) -> None:
     """
     Render the full classifier output panel
-
-    Args:
-        inputs: the validated input dict from render_input_form
     """
     try: 
         with st.spinner("Generating prediction..."):
@@ -77,9 +67,7 @@ def render_classifier_panel(inputs: Dict[str, object]) -> None:
     )
 
     st.subheader("Predicted regulatory outcome")
-    st.caption(
-        "Predicted probability for each outcome based on the breach you described, compared to the historical baseline rate (vertical line) for that outcome."
-    )
+    st.caption("Predicted probability for each outcome based on the breach you described, compared to the historical baseline rate (vertical line) for that outcome.")
 
     for class_label in DECISION_DISPLAY_ORDER:
         with st.container(border=True):

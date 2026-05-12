@@ -14,7 +14,6 @@ from utils.artefacts import (
 class InferenceError(Exception):
     """Raised when classifier or cluster inference fails for any form of reason"""
 
-
 def _wrap_errors(operation: str):
     """
     Decorator to wrap inference functions and converts any unexpected error into a typed inference error with a message
@@ -44,7 +43,6 @@ def _wrap_errors(operation: str):
 def _build_classifier_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
     """
     Build a single-row dataframe in the exact column order the CatBoost classifier was trained on
-    
     The column order is read from classifier_feature_metadata.json (feature_columns) rather than reconstructed here so this stays correct even if vocab does change in future
     """
     metadata = load_classifier_feature_metadata()
@@ -81,9 +79,6 @@ def _build_classifier_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
 def predict_classifier_probabilities(inputs: Dict[str, object]) -> Dict[str, float]:
     """
     Run the classifier on a single user input and return per-class probabilities keyed by class label
-
-    Returns:
-        Dict mapping target class label to its predicted probability in between [0, 1] (probabilities for all classes should sum to 1)
     """
     model = load_classifier()
     feature_row = _build_classifier_feature_row(inputs)
@@ -98,7 +93,6 @@ def predict_classifier_probabilities(inputs: Dict[str, object]) -> Dict[str, flo
 def _build_kmeans_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
     """
     Build a single row dataframe in the column order the kmeans cluster model was trained on (MLB + OHE)
-
     Different from build classifier feature row: kmeans was trained on the one-hot encoded categorical columns not the native categorical ones
     """
     # Load the metadata and required encoders for the kmeans features
@@ -144,9 +138,6 @@ def _build_kmeans_feature_row(inputs: Dict[str, object]) -> pd.DataFrame:
 def predict_cluster(inputs: Dict[str, object]) -> int:
     """
     Run the kmeans cluster model on a single user input and return the cluster index the breach is assigned to
-
-    Returns:
-        Integer cluster index [0, k-1]
     """
     model = load_kmeans()
     feature_row = _build_kmeans_feature_row(inputs)

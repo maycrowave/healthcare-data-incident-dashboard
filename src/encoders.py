@@ -4,7 +4,7 @@ import pickle
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer, OneHotEncoder
 
-from src.constants import (MULTILABEL_COLS, CATEGORICAL_COLS, ARTIFACTS_PATH)
+from src.constants import (MULTILABEL_COLS, CATEGORICAL_COLS, ARTEFACTS_PATH)
 
 def split_multilabel_values(series: pd.Series):
     """Split mutli-valued features into lists for multi-label binarizer"""
@@ -76,7 +76,7 @@ def build_mlb_ohe_matrix(
     feature_matrix = pd.concat([ohe_encoded, mlb_encoded], axis=1).reset_index(drop=True)
     return feature_matrix
 
-def save_encoders(mlb_encoders: Dict[str, MultiLabelBinarizer], ohe_encoder: OneHotEncoder, output_dir: str = ARTIFACTS_PATH) -> None:
+def save_encoders(mlb_encoders: Dict[str, MultiLabelBinarizer], ohe_encoder: OneHotEncoder, output_dir: str = ARTEFACTS_PATH) -> None:
     """Save the fitted encoders to disk using pickle"""
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
@@ -88,7 +88,7 @@ def save_encoders(mlb_encoders: Dict[str, MultiLabelBinarizer], ohe_encoder: One
     with open(output_path / "ohe.pkl", "wb") as f:
         pickle.dump(ohe_encoder, f)
         
-def load_encoders(multilabel_cols: List[str] = MULTILABEL_COLS, output_dir: str = ARTIFACTS_PATH) -> Tuple[Dict[str, MultiLabelBinarizer], OneHotEncoder]:
+def load_encoders(multilabel_cols: List[str] = MULTILABEL_COLS, output_dir: str = ARTEFACTS_PATH) -> Tuple[Dict[str, MultiLabelBinarizer], OneHotEncoder]:
     """Load the fitted encoders from disk using pickle"""
     input_path = Path(output_dir)
     

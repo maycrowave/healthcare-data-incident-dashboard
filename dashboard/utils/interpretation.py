@@ -1,18 +1,5 @@
 from typing import Dict, NamedTuple
-
-# Probability to plain text likelihood
-_LIKELIHOODS = [
-    (0.00, 0.10, "Very unlikely"),
-    (0.10, 0.33, "Unlikely"),
-    (0.33, 0.66, "About as likely as not"),
-    (0.66, 0.90, "Likely"),
-    (0.90, 1.01, "Very likely")
-]
-
-_LIMITED_RELIABILITY_CLASSES = {
-    "Investigation Pursued": ("This model rarely predicts Investigation Pursued. Treat low values for this outcome as 'unable to assess' rather than 'unlikely'.")
-}
-
+from utils.constants import _LIMITED_RELIABILITY_CLASSES, _LIKELIHOODS
 
 def likelihood_label(probability: float) -> str:
     """Return the IPCC plain text likelihood label for a probability"""

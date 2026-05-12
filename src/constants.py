@@ -1,7 +1,7 @@
 # File paths
 ORIGINAL_DATA_PATH = "../data/data-security-incidents-trends-q1-2019-to-q4-2025.csv"
 PROCESSED_DATA_PATH = "../data/new-data-security-incident-trends-health-sector.csv"
-ARTIFACTS_PATH = "../artifacts/"
+ARTEFACTS_PATH = "../artefacts/"
 
 PREPROCESSING_CATEGORICAL_COLS = [
     "bi_reference",

@@ -8,10 +8,7 @@ import streamlit as st
 from catboost import CatBoostClassifier
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MultiLabelBinarizer, OneHotEncoder
-
-ARTEFACTS_PATH = Path(__file__).resolve().parents[2] / "artefacts"
-CLASSIFIER_PATH = ARTEFACTS_PATH / "classifier"
-CLUSTER_PATH = ARTEFACTS_PATH / "clustering"
+from utils.constants import ARTEFACTS_PATH, CLASSIFIER_PATH, CLUSTER_PATH
 
 def _classifier_path(filename: str) -> Path:
     """Return the absolute path to a classifier artefact file, raise if missing"""
@@ -52,7 +49,6 @@ def load_kmeans() -> KMeans:
 def load_encoders() -> Tuple[Dict[str, MultiLabelBinarizer], OneHotEncoder]:
     """
     Load the fitted encoders
-
     Returns a tuple of (mlb_encoders_by_column, ohe_encoder)
     The MLB dict has one entry per multilabel column (data_subject_type, data_type)
     The OHE encoder is only used by the KMeans pipeline not the classifier
@@ -70,21 +66,21 @@ def load_encoders() -> Tuple[Dict[str, MultiLabelBinarizer], OneHotEncoder]:
 
 @st.cache_data
 def load_allowed_values() -> Dict[str, List[str]]:
-    """Valid input values per feature, derived from train+validation data."""
+    """Valid input values per feature, derived from train+validation data"""
     with open(_classifier_path("allowed_values.json")) as f:
         return json.load(f)
 
 
 @st.cache_data
 def load_classifier_feature_metadata() -> Dict[str, Any]:
-    """Feature ordering and categorical indices required by the classifier."""
+    """Feature ordering and categorical indices required by the classifier"""
     with open(_classifier_path("classifier_feature_metadata.json")) as f:
         return json.load(f)
 
 
 @st.cache_data
 def load_classifier_model_type() -> Dict[str, Any]:
-    """Metadata about the selected classifier (model name, encoding, etc.)."""
+    """Metadata about the selected classifier"""
     with open(_classifier_path("classifier_model_type.json")) as f:
         return json.load(f)
 
@@ -99,9 +95,8 @@ def load_baseline_probabilities() -> Dict[str, float]:
 @st.cache_data
 def load_classifier_results() -> Dict[str, Any]:
     """
-    Classifier test-set evaluation results.
-
-    Used by the dashboard to surface per-class Brier scores (NF1, calibration indicator) and to display headline metrics on the About screen.
+    Classifier test-set evaluation results
+    Used by the dashboard to show per-class Brier scores and to display metrics on the about screen
     """
     with open(_classifier_path("classifier_results.json")) as f:
         return json.load(f)
@@ -110,9 +105,8 @@ def load_classifier_results() -> Dict[str, Any]:
 @st.cache_data
 def load_cluster_characteristics() -> Dict[str, Any]:
     """
-    Per-cluster size, outcome distribution, and dominant feature values.
-
-    Drives the cluster context panel (F4) and the natural-language cluster description.
+    Per-cluster size, outcome distribution, and dominant feature values
+    Drives the cluster context panel and the text cluster description
     """
     with open(_cluster_path("kmeans_cluster_characteristics.json")) as f:
         return json.load(f)
@@ -120,7 +114,7 @@ def load_cluster_characteristics() -> Dict[str, Any]:
 
 @st.cache_data
 def load_kmeans_feature_metadata() -> Dict[str, Any]:
-    """Feature ordering required by the KMeans matrix builder."""
+    """Feature ordering required by the kmeans matrix builder"""
     with open(_cluster_path("kmeans_feature_metadata.json")) as f:
         return json.load(f)
 
@@ -136,7 +130,6 @@ def load_kmeans_summary() -> Dict[str, Any]:
 def load_processed_dataset() -> pd.DataFrame:
     """
     Full processed dataset for the explore screen
-
     Loaded from data/ rather than artefacts/ since this is source data, not a model output
     """
     data_path = ARTEFACTS_PATH.parent / "data" / "new-data-security-incident-trends-health-sector.csv"

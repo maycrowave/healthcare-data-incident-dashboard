@@ -310,7 +310,7 @@ def plot_calibration_curve(
         
         ax.set_xlabel("Predicted Probability", fontsize=10)
         ax.set_ylabel("Actual Frequency", fontsize=10)
-        ax.set_title(f"{title}: {class_name}", fontsize=12, fontweight="bold")
+        ax.set_title(f"{class_name}", fontsize=12, fontweight="bold")
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
         ax.legend(loc="upper left", fontsize=9)

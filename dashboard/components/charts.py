@@ -1,28 +1,13 @@
 import plotly.graph_objects as go
 from typing import Dict, List, Optional
 import pandas as pd
-
-# Per-class colours, matching src/constants.PER_CLASS_COLOURS so dashboard colours are similar to the dissertation figures
-_PER_CLASS_COLOURS: Dict[str, str] = {
-    "Investigation Pursued": "#78ADED",
-    "Informal Action Taken": "#ADED78",
-    "No Further Action": "#ED78AD"
-}
+from utils.constants import _PER_CLASS_COLOURS
 
 def horizontal_probability_bar(probability: float, baseline: Optional[float] = None, height: int = 70) -> go.Figure:
     """
     A single horizontal bar showing a probability on a fixed [0, 1] axis with an optional vertical line mark for the historical baseline
     Designed to be rendered one per class on the simulator's classifier panel
-
-    Args:
-        probability: predicted probability for this class, in [0, 1]
-        baseline: historical baseline rate for this class, in [0, 1] (drawn as a vertical line on the bar)
-        height: bar height in pixels, kept compact since these are stacked
-
-    Returns:
-        A plotly figure ready to be rendered
     """
-    
     # Validation to catch any values out of range 0 to 1 (should never but just checking)
     if not 0.0 <= probability <= 1.0:
         raise ValueError(f"Probability out of range [0, 1]: {probability}")
@@ -36,7 +21,7 @@ def horizontal_probability_bar(probability: float, baseline: Optional[float] = N
         type="rect",
         x0=0,
         x1=1,
-        y0=0,
+        y0=-0.1,
         y1=1,
         xref="x",
         yref="y",
@@ -50,8 +35,8 @@ def horizontal_probability_bar(probability: float, baseline: Optional[float] = N
         type="rect",
         x0=0,
         x1=probability,
-        y0=0,
-        y1=1,
+        y0=-0.1,
+        y1=1.05,
         xref="x",
         yref="y",
         fillcolor="#BE83E2",
@@ -133,21 +118,12 @@ def horizontal_probability_bar(probability: float, baseline: Optional[float] = N
             fixedrange=True
         )
     )
-
     return fig
 
 def horizontal_stacked_proportions(proportions: Dict[str, float], class_order: List[str], height: int = 80) -> go.Figure:
     """
     A single horizontal bar split into segments one per class sized by proportion
     Used for the cluster panel's cluster decision distribution
-
-    Args:
-        proportions: dict mapping class label to proportion in [0, 1]
-        class_order: the order in which to lay out segments, left to right
-        height: bar height in pixels
-
-    Returns:
-        A plotly figure ready to be rendered
     """
     fig = go.Figure()
 
@@ -176,18 +152,18 @@ def horizontal_stacked_proportions(proportions: Dict[str, float], class_order: L
     # Layout settings for a stacked bar with no gaps or ticks
     fig.update_layout(
         barmode="stack",
-        height=height,
-        margin=dict(l=0, r=0, t=4, b=4),
+        height=100,
+        margin=dict(l=0, r=0, t=4, b=1),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         showlegend=True,
         legend=dict(
             orientation="h",
             yanchor="top",
-            y=-0.5,
+            y=-1,
             xanchor="center",
             x=0.5,
-            font=dict(size=12)
+            font=dict(size=14)
         ),
         xaxis=dict(
             range=[0, 1],
@@ -203,7 +179,6 @@ def horizontal_stacked_proportions(proportions: Dict[str, float], class_order: L
             fixedrange=True
         )
     )
-
     return fig
 
 
@@ -219,17 +194,6 @@ def vertical_stacked_proportions_by_feature(
     """
     Stacked vertical bar chart: one bar per feature value, each bar split into class proportions
     Used for the "decision outcomes by feature" panels on the explore page
-
-    Args:
-        df: dataframe containing feature_col and target_col
-        feature_col: the feature whose values become the x-axis bars
-        target_col: the target column (decision_taken) segments
-        class_order: stacking order, bottom to top
-        feature_value_order: optional explicit x-axis ordering, if none it sorts by total breach count descending
-        height: chart height in pixels
-
-    Returns:
-        A plotly figure ready to be rendered
     """
     # Counts per feature_value, class reindex to make sure all classes are present
     counts = (
@@ -297,7 +261,6 @@ def vertical_stacked_proportions_by_feature(
             gridcolor="rgba(0,0,0,0.05)"
         )
     )
-
     return fig
 
 
@@ -344,7 +307,6 @@ def time_trend_counts(
         yaxis=dict(title="Breaches reported", showgrid=True, gridcolor="rgba(0,0,0,0.05)"),
         hovermode="x unified"
     )
-
     return fig
 
 
@@ -399,5 +361,4 @@ def time_trend_proportions(
         ),
         hovermode="x unified"
     )
-
     return fig

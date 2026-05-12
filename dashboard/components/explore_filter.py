@@ -18,21 +18,21 @@ def render_filter(df: pd.DataFrame) -> ExploreFilter:
     all_years = sorted(df["year"].unique().tolist())
     all_quarters = sorted(df["quarter"].unique().tolist())
 
-    with st.expander("Filter the data", expanded=False):
+    with st.expander("Filter the data", expanded=True):
         col_year, col_quarter = st.columns(2)
         with col_year:
             selected_years = st.multiselect(
                 "Years",
                 options=all_years,
                 default=all_years,
-                placeholder="Select one or more years",
+                placeholder="Select one or more years"
             )
         with col_quarter:
             selected_quarters = st.multiselect(
                 "Quarters",
                 options=all_quarters,
                 default=all_quarters,
-                placeholder="Select one or more quarters",
+                placeholder="Select one or more quarters"
             )
 
     return ExploreFilter(

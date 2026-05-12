@@ -1,5 +1,5 @@
 {
-  "model": "Final CatBoost Tuned: Test Evaluation (No Weight MLB + CAT)",
+  "model": "Final CatBoost Tuned: Test Evaluation (No Weights MLB + CAT)",
   "accuracy": 0.9437564499484005,
   "macro_f1": 0.45731246627091204,
   "macro_precision": 0.45828877005347596,
