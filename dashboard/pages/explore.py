@@ -13,12 +13,7 @@ from components.charts import (
     vertical_stacked_proportions_by_feature
 )
 from utils.artefacts import load_baseline_probabilities, load_processed_dataset
-
-_DISPLAY_TARGET_CLASS_ORDER: List[str] = [
-    "Investigation Pursued",
-    "Informal Action Taken",
-    "No Further Action"
-]
+from utils.constants import DECISION_DISPLAY_ORDER
 
 # Feature display order on the page with labels for the charts
 _FEATURE_PANELS: List[tuple] = [
@@ -68,9 +63,21 @@ def main() -> None:
     )
     render_disclaimer()
 
-    df_full = load_processed_dataset()
+    try: 
+        df_full = load_processed_dataset()
+    except Exception as e:
+        st.error(
+            f"Could not load the breach dataset."
+            f"Details: {e}"
+        )
+        return
+
     selection = render_filter(df_full)
     df = apply_filter(df_full, selection)
+    
+    if df.empty:
+        st.warning("No breaches match the current filter, adjust the filter to see data.")
+        return
     
     # csv export of the currently filtered dataset
     csv_bytes = df.to_csv(index=False).encode("utf-8")
@@ -82,23 +89,19 @@ def main() -> None:
         help="Download the breaches matching the current year/quarter filter.",
     )
 
-    if df.empty:
-        st.warning("No breaches match the current filter, adjust the filter to see data.")
-        return
-
     # About the data
     st.subheader("About the data in view")
 
     col_total, col_filtered, col_outcomes = st.columns(3)
     col_total.metric("Total breaches in dataset", f"{len(df_full):,}")
     col_filtered.metric("Breaches in current view", f"{len(df):,}")
-    col_outcomes.metric("Distinct decision outcomes", len(_DISPLAY_TARGET_CLASS_ORDER))
+    col_outcomes.metric("Distinct decision outcomes", len(DECISION_DISPLAY_ORDER))
 
     st.markdown("**Decision distribution in current view**")
     decision_counts = df["decision_taken"].value_counts()
     decision_proportions = {
         label: float(decision_counts.get(label, 0)) / len(df)
-        for label in _DISPLAY_TARGET_CLASS_ORDER
+        for label in DECISION_DISPLAY_ORDER
     }
 
     # Overall decision distribution
@@ -106,14 +109,14 @@ def main() -> None:
     with chart_tab:
         fig = horizontal_stacked_proportions(
             proportions=decision_proportions,
-            class_order=_DISPLAY_TARGET_CLASS_ORDER,
+            class_order=DECISION_DISPLAY_ORDER,
         )
         st.plotly_chart(fig, width='stretch', config={"displayModeBar": False})
     with table_tab:
         decision_table = pd.DataFrame({
-            "Decision": _DISPLAY_TARGET_CLASS_ORDER,
-            "Breaches": [decision_counts.get(label, 0) for label in _DISPLAY_TARGET_CLASS_ORDER],
-            "Share": [f"{decision_proportions[label]:.1%}" for label in _DISPLAY_TARGET_CLASS_ORDER],
+            "Decision": DECISION_DISPLAY_ORDER,
+            "Breaches": [decision_counts.get(label, 0) for label in DECISION_DISPLAY_ORDER],
+            "Share": [f"{decision_proportions[label]:.1%}" for label in DECISION_DISPLAY_ORDER],
         })
         st.dataframe(decision_table, width='stretch', hide_index=True)
 
@@ -138,14 +141,15 @@ def main() -> None:
                 df=df_for_feature,
                 feature_col=feature_col,
                 target_col="decision_taken",
-                class_order=_DISPLAY_TARGET_CLASS_ORDER,
+                class_order=DECISION_DISPLAY_ORDER,
+                barmode="group" if feature_col == "incident_category" else "stack"
             )
             st.plotly_chart(fig, width='stretch', config={"displayModeBar": False})
         with table_tab:
             crosstab = pd.crosstab(
                 df_for_feature[feature_col],
                 df_for_feature["decision_taken"],
-            ).reindex(columns=_DISPLAY_TARGET_CLASS_ORDER, fill_value=0)
+            ).reindex(columns=DECISION_DISPLAY_ORDER, fill_value=0)
             crosstab["Total"] = crosstab.sum(axis=1)
             crosstab = crosstab.sort_values("Total", ascending=False)
             st.dataframe(crosstab, width='stretch')
@@ -176,7 +180,7 @@ def main() -> None:
                 df=df_time,
                 period_col="period",
                 target_col="decision_taken",
-                class_order=_DISPLAY_TARGET_CLASS_ORDER,
+                class_order=DECISION_DISPLAY_ORDER,
                 period_order=period_order,
             )
         else:
@@ -184,14 +188,14 @@ def main() -> None:
                 df=df_time,
                 period_col="period",
                 target_col="decision_taken",
-                class_order=_DISPLAY_TARGET_CLASS_ORDER,
+                class_order=DECISION_DISPLAY_ORDER,
                 period_order=period_order,
             )
         st.plotly_chart(fig, width='stretch', config={"displayModeBar": False})
     with table_tab:
         time_table = (
             pd.crosstab(df_time["period"], df_time["decision_taken"])
-            .reindex(index=period_order, columns=_DISPLAY_TARGET_CLASS_ORDER, fill_value=0)
+            .reindex(index=period_order, columns=DECISION_DISPLAY_ORDER, fill_value=0)
         )
         time_table["Total"] = time_table.sum(axis=1)
         st.dataframe(time_table, width='stretch')

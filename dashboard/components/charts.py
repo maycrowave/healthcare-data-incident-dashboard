@@ -1,4 +1,3 @@
-from typing import Optional
 import plotly.graph_objects as go
 from typing import Dict, List, Optional
 import pandas as pd
@@ -106,11 +105,33 @@ def horizontal_probability_bar(probability: float, baseline: Optional[float] = N
     )
     
     fig.update_layout(
+        barmode="stack",
         height=height,
-        margin=dict(l=0, r=0, t=4, b=20),
+        margin=dict(l=0, r=0, t=4, b=60),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        showlegend=False
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.25,
+            xanchor="left",
+            x=0,
+            font=dict(size=12)
+        ),
+        xaxis=dict(
+            range=[0, 1],
+            showticklabels=False,
+            showgrid=False,
+            zeroline=False,
+            fixedrange=True
+        ),
+        yaxis=dict(
+            showticklabels=False,
+            showgrid=False,
+            zeroline=False,
+            fixedrange=True
+        )
     )
 
     return fig
@@ -148,7 +169,7 @@ def horizontal_stacked_proportions(proportions: Dict[str, float], class_order: L
             text=f"{proportion:.0%}" if proportion >= 0.05 else "",
             textposition="inside",
             insidetextanchor="middle",
-            textfont=dict(color="#000000", size=12),
+            textfont=dict(color="#000000", size=14),
             hovertemplate=f"{class_label}: {proportion:.1%}<extra></extra>",
         ))
 
@@ -162,10 +183,10 @@ def horizontal_stacked_proportions(proportions: Dict[str, float], class_order: L
         showlegend=True,
         legend=dict(
             orientation="h",
-            yanchor="bottom",
+            yanchor="top",
             y=-0.5,
-            xanchor="left",
-            x=0,
+            xanchor="center",
+            x=0.5,
             font=dict(size=12)
         ),
         xaxis=dict(
@@ -192,7 +213,8 @@ def vertical_stacked_proportions_by_feature(
     target_col: str,
     class_order: List[str],
     feature_value_order: Optional[List[str]] = None,
-    height: int = 380
+    height: int = 380,
+    barmode: str = "stack"
 ) -> go.Figure:
     """
     Stacked vertical bar chart: one bar per feature value, each bar split into class proportions
@@ -243,23 +265,30 @@ def vertical_stacked_proportions_by_feature(
         ))
 
     # Layout settings to make a stacked bar with no gaps and a fixed width for the probability range
+    # Replace the existing layout block with:
+    many_values = len(feature_value_order) > 7
     fig.update_layout(
-        barmode="stack",
-        height=height,
-        margin=dict(l=0, r=0, t=4, b=4),
+        barmode=barmode,
+        height=520 if many_values else 380,
+        margin=dict(l=0, r=0, t=4, b=140 if many_values else 60),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         showlegend=True,
+        
         legend=dict(
             orientation="h",
-            yanchor="bottom",
-            y=-0.4,
+            yanchor="top",
+            y=-0.50 if many_values else -0.25,
             xanchor="left",
             x=0
         ),
         
-        # If there are many feature values then rotate x-axis labels for readability
-        xaxis=dict(title=None, tickangle=-30 if len(feature_value_order) > 4 else 0),
+        xaxis=dict(
+            title=None,
+            tickangle=-30 if many_values else 0,
+            automargin=True
+        ),
+        
         yaxis=dict(
             title="Share of breaches",
             range=[0, 1],
@@ -366,7 +395,7 @@ def time_trend_proportions(
             range=[0, 1],
             tickformat=".0%",
             showgrid=True,
-            gridcolor="rgba(0,0,0,0.05)",
+            gridcolor="rgba(0,0,0,0.05)"
         ),
         hovermode="x unified"
     )

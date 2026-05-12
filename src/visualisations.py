@@ -353,3 +353,79 @@ def plot_cluster_distribution(
     plt.show()
     return row_proportions
 
+def plot_partition_bar_chart(
+    df: pd.DataFrame,
+    train_years: List[int],
+    val_year: int,
+    val_quarters: List[str],
+    test_year: int,
+    title: str = "Breaches per quarter, coloured by partition",
+    figsize: Tuple[int, int] = (12, 6),
+    step: int = 100
+) -> pd.DataFrame:
+    """
+    Vertical bar chart of breach counts per quarter, with each bar coloured by which partition (train/ validation /test) the quarter belongs to
+    """
+    # Build chronological period label and count breaches per period
+    df = df.copy()
+    df["period"] = df["year"].astype(str) + " " + df["quarter"].astype(str)
+
+    counts = (
+        df.groupby(["year", "quarter", "period"], observed=True).size()
+        .reset_index(name="count")
+        .sort_values(["year", "quarter"])
+    )
+
+    # Assign each period to a partition
+    def assign_partition(row):
+        if row["year"] == test_year:
+            return "Test"
+        if row["year"] == val_year and row["quarter"] in val_quarters:
+            return "Validation"
+        return "Training"
+
+    counts["partition"] = counts.apply(assign_partition, axis=1)
+
+    # Map partitions to colours from your existing palette
+    partition_colours = {
+        "Training": COLOUR_PALETTE[3],
+        "Validation": COLOUR_PALETTE[2],
+        "Test": COLOUR_PALETTE[1],
+    }
+    bar_colours = [partition_colours[p] for p in counts["partition"]]
+
+    fig, ax = plt.subplots(figsize=figsize)
+    bars = ax.bar(
+        counts["period"],
+        color=bar_colours,
+        height=counts["count"],
+        edgecolor="white"
+    )
+
+    ax.set_title(title, fontsize=12, fontweight="bold")
+    ax.set_xlabel("Quarter")
+    ax.set_ylabel("Breaches reported")
+    ax.set_yticks(np.arange(0, counts["count"].max() * 1.2, step))
+    ax.set_xticks(range(len(counts["period"])))
+    ax.set_xticklabels(counts["period"], rotation=45, ha="right")
+    ax.grid(True, axis="y", linestyle="--", alpha=0.5)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    # Count labels above each bar
+    for bar, count in zip(bars, counts["count"]):
+        if count > 0:
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                bar.get_height(),
+                f"{count:,}",
+                ha="center", va="bottom", fontsize=9,
+            )
+
+    handles = [plt.Rectangle((0, 0), 1, 1, color=partition_colours[p]) for p in partition_colours]
+    ax.legend(handles=handles, loc="best", frameon=False, labels=partition_colours.keys())
+
+    plt.tight_layout()
+    plt.show()
+
+    return counts

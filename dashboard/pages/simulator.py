@@ -1,16 +1,12 @@
-from time import time
+import time
 import streamlit as st
 
-from dashboard.components import inputs
-from dashboard.components.classifier_output import render_classifier_panel
-from dashboard.components.disclaimer import render_disclaimer
-from dashboard.components.header import render_header
-from dashboard.components.inputs import render_input_form
-from utils.artefacts import load_processed_dataset
 from components.classifier_output import render_classifier_panel
 from components.cluster_output import render_cluster_panel
+from components.disclaimer import render_disclaimer
+from components.header import render_header
+from components.inputs import render_input_form
 from components.output_footer import render_output_footer
-
 
 def main() -> None:
     render_header(
@@ -20,18 +16,17 @@ def main() -> None:
         ),
     )
     render_disclaimer()
+    
 
     inputs = render_input_form()
-    # Start timer after users input is submitted for testing purposes later
-    if inputs is not None:
-        time_start = time.perf_counter()
-        
     if inputs is None:
         st.info(
             "Fill in all six fields above and click **Simulate outcome** to see predicted probabilities, historical baselines and similar past breaches."
         )
         return
-
+    
+    # Start timer after users input is submitted for testing purposes later
+    time_start = time.perf_counter()#
     render_classifier_panel(inputs)
     render_cluster_panel(inputs)
     render_output_footer()

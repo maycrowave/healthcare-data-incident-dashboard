@@ -25,23 +25,24 @@ _HELP_TEXT = {
     )
 }
 
-def _validate(inputs: Dict[str, object]) -> List[str]:
-    """Return a list of human-readable error messages, empty if all are valid"""
+
+def _validate(inputs_dict: Dict[str, object]) -> List[str]:
+    """Return a list of error messages, empty if all are valid"""
     errors: List[str] = []
 
-    if not inputs.get("data_subject_type"):
+    if not inputs_dict.get("data_subject_type"):
         errors.append("Select at least one **Data Subject Type**.")
-    if not inputs.get("data_type"):
+    if not inputs_dict.get("data_type"):
         errors.append("Select at least one **Data Type**.")
 
-    # Single-selects use index=None to start empty, an unsubmitted single-select will return None which is treated as missing
+    # Single selects use index=None to start empty, an unsubmitted single select will return None which is treated as missing
     for field, label in [
         ("incident_category", "Incident Category"),
         ("incident_type", "Incident Type"),
         ("no_data_subjects_affected", "No. Data Subjects Affected"),
         ("time_taken_to_report", "Time Taken to Report"),
     ]:
-        if inputs.get(field) is None:
+        if inputs_dict.get(field) is None:
             errors.append(f"Select a value for **{label}**.")
 
     return errors
@@ -118,7 +119,7 @@ def render_input_form() -> Optional[Dict[str, object]]:
     if not submitted:
         return None
 
-    inputs: Dict[str, object] = {
+    inputs_dict: Dict[str, object] = {
         "incident_category": incident_category,
         "incident_type": incident_type,
         "data_subject_type": data_subject_type,
@@ -127,10 +128,10 @@ def render_input_form() -> Optional[Dict[str, object]]:
         "time_taken_to_report": time_taken_to_report,
     }
 
-    errors = _validate(inputs)
+    errors = _validate(inputs_dict)
     if errors:
         for err in errors:
             st.error(err)
         return None
 
-    return inputs
+    return inputs_dict

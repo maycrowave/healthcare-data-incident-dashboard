@@ -9,6 +9,11 @@ _LIKELIHOODS = [
     (0.90, 1.01, "Very likely")
 ]
 
+_LIMITED_RELIABILITY_CLASSES = {
+    "Investigation Pursued": ("This model rarely predicts Investigation Pursued. Treat low values for this outcome as 'unable to assess' rather than 'unlikely'.")
+}
+
+
 def likelihood_label(probability: float) -> str:
     """Return the IPCC plain text likelihood label for a probability"""
     if not 0.0 <= probability <= 1.0:
@@ -68,10 +73,6 @@ def calibration_tier(class_label: str, brier: float, base_rate: float) -> Calibr
             f"Brier {brier:.3f} VS Uninformative baseline of {baseline:.3f} for this class's prevalence in the training data."
         )
     )
-
-_LIMITED_RELIABILITY_CLASSES = {
-    "Investigation Pursued": ("This model rarely predicts Investigation Pursued. Treat low values for this outcome as 'unable to assess' rather than 'unlikely'.")
-}
 
 def calibration_tiers_from_results(
     classifier_results: Dict[str, float],

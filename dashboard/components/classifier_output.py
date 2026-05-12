@@ -1,9 +1,9 @@
 from typing import Dict, List
 import streamlit as st
 from components.charts import horizontal_probability_bar
-from utils.artefacts import load_classifier_results,  load_classifier_results, load_baseline_probabilities
+from utils.artefacts import  load_classifier_results, load_baseline_probabilities
 
-
+from utils.constants import DECISION_DISPLAY_ORDER
 from utils.inference import InferenceError, predict_classifier_probabilities
 from utils.interpretation import (
     CalibrationTier,
@@ -11,17 +11,11 @@ from utils.interpretation import (
     likelihood_label
 )
 
-_DISPLAY_ORDER: List[str] = [
-    "Investigation Pursued",
-    "Informal Action Taken",
-    "No Further Action"
-]
-
 _TIER_BADGE_COLOUR: Dict[str, str] = {
-    "high": "#aded78",
-    "moderate": "#78aded",
-    "low": "#edae78",
-    "limited": "#b1b1b1"
+    "high": "green",
+    "moderate": "blue",
+    "low": "orange",
+    "limited": "red"
 }
 
 def _render_reliability_badge(tier: CalibrationTier) -> None:
@@ -79,7 +73,7 @@ def render_classifier_panel(inputs: Dict[str, object]) -> None:
     tiers = calibration_tiers_from_results(
         classifier_results=classifier_results,
         base_rates=baselines,
-        class_labels=_DISPLAY_ORDER
+        class_labels=DECISION_DISPLAY_ORDER
     )
 
     st.subheader("Predicted regulatory outcome")
@@ -87,7 +81,7 @@ def render_classifier_panel(inputs: Dict[str, object]) -> None:
         "Predicted probability for each outcome based on the breach you described, compared to the historical baseline rate (vertical line) for that outcome."
     )
 
-    for class_label in _DISPLAY_ORDER:
+    for class_label in DECISION_DISPLAY_ORDER:
         with st.container(border=True):
             _render_class_row(
                 class_label=class_label,

@@ -1,4 +1,4 @@
-from typing import List, NamedTuple, Tuple
+from typing import List, NamedTuple
 
 import pandas as pd
 import streamlit as st

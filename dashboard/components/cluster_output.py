@@ -1,15 +1,9 @@
 from typing import Dict, List
 import streamlit as st
 from components.charts import horizontal_stacked_proportions
+from dashboard.utils.constants import DECISION_DISPLAY_ORDER
 from utils.artefacts import load_cluster_characteristics
 from utils.inference import InferenceError, predict_cluster
-
-# Same display order as the classifier panel for visual consistency
-_DISPLAY_ORDER: List[str] = [
-    "Investigation Pursued",
-    "Informal Action Taken",
-    "No Further Action"
-]
 
 # Map raw feature column names to user-facing labels, so the description reads as natural prose rather than column names
 _FEATURE_LABELS: Dict[str, str] = {
@@ -109,9 +103,9 @@ def render_cluster_panel(inputs: Dict[str, object]) -> None:
         st.caption("Historical decision distribution within this group:")
         outcome_distribution: Dict[str, float] = cluster_data.get("outcome_distribution", {})
         # Convert from percentages (out of 100) to proportions (normalised) for the chart
-        proportions = {label: outcome_distribution.get(label, 0.0) / 100.0 for label in _DISPLAY_ORDER}
+        proportions = {label: outcome_distribution.get(label, 0.0) / 100.0 for label in DECISION_DISPLAY_ORDER}
 
-        fig = horizontal_stacked_proportions(proportions=proportions, class_order=_DISPLAY_ORDER)
+        fig = horizontal_stacked_proportions(proportions=proportions, class_order=DECISION_DISPLAY_ORDER)
         
         st.plotly_chart(
             fig,

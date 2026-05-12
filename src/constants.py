@@ -35,6 +35,7 @@ CV_SPLITS = int(5)
 RANDOM_STATE = int(42)
 
 # Test year for train/val/test split
+TRAIN_YEARS = list(range(2019, 2024))
 TEST_YEAR = int(2025)
 VAL_YEAR = int(2024)
 VAL_QUARTERS = ["Qtr 3", "Qtr 4"]
@@ -55,7 +56,7 @@ NO_DATA_SUBJECTS_AFFECTED_ORDER = [
 ]
 
 # Colour palette for charts/ graphs
-COLOUR_PALETTE = ["#f47d9b","#7be289","#f3dc4a","#8097e8","#e8a16e","#d585ed","#60e1e1"]
+COLOUR_PALETTE = ["#ee7878","#ADED78","#efdf79","#78ADED","#e8a16e","#ED78AD","#73e8e8"]
 PER_CLASS_COLOURS = {
     "Investigation Pursued": "#78ADED",
     "Informal Action Taken": "#ADED78",
