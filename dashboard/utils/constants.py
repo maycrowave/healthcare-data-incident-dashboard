@@ -65,7 +65,7 @@ _DESCRIPTION_FEATURES: List[str] = [
 
 # Per-class colours, matching src/constants.PER_CLASS_COLOURS so dashboard colours are similar to the dissertation figures
 _PER_CLASS_COLOURS: Dict[str, str] = {
-    "Investigation Pursued": "#78ADED",
-    "Informal Action Taken": "#ADED78",
-    "No Further Action": "#ED78AD"
+    "Investigation Pursued": "#83D7E2",
+    "Informal Action Taken": "#A7E283",
+    "No Further Action": "#E28E83"
 }

@@ -35,7 +35,8 @@ def _validate(inputs_dict: Dict[str, object]) -> List[str]:
     if not inputs_dict.get("data_type"):
         errors.append("Select at least one **Data Type**.")
 
-    # Single selects use index=None to start empty, an unsubmitted single select will return None which is treated as missing
+    # Single selects use index = None to start empty
+    # An unsubmitted single select will return None which is treated as missing
     for field, label in [
         ("incident_category", "Incident Category"),
         ("incident_type", "Incident Type"),

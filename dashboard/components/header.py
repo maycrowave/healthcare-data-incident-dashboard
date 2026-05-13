@@ -10,13 +10,11 @@ def render_header(title: str, subtitle: str | None = None) -> None:
     """
     Render the page header
     """
-    st.title(title)
-
+    st.title(title, text_alignment="center")
     if subtitle:
-        st.markdown(subtitle)
-
+        st.markdown(subtitle, text_alignment="center")
     st.caption(
-        f"Trained on {DATA_SOURCE_NAME} data, {TRAINING_DATA_RANGE}. "
-        f"Dashboard last updated {DASHBOARD_LAST_UPDATED}."
+        f"Trained on {DATA_SOURCE_NAME} data, {TRAINING_DATA_RANGE}. Dashboard last updated {DASHBOARD_LAST_UPDATED}.",
+        text_alignment="center"
     )
     st.divider()

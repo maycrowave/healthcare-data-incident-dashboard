@@ -12,6 +12,7 @@ def render_output_footer() -> None:
         They are not a prediction of what the ICO will decide for any specific real-world breach.
         The cluster panel shows what kinds of breaches look similar to the one you described, not what their decision implies for yours.
 
-        For full methodology, training data range, model performance and limitations, see the **About** page in the sidebar.
+        For full methodology, training data range, model performance and limitations, see the **About** page in the sidebar or click the button below.
         """
     )
+    st.page_link("pages/About.py", label="Learn about the methodology and limitations ->")

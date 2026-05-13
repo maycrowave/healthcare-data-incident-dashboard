@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 import pandas as pd
 from utils.constants import _PER_CLASS_COLOURS
 
-def horizontal_probability_bar(probability: float, baseline: Optional[float] = None, height: int = 70) -> go.Figure:
+def horizontal_probability_bar(probability: float, baseline: Optional[float] = None, height: int = 50) -> go.Figure:
     """
     A single horizontal bar showing a probability on a fixed [0, 1] axis with an optional vertical line mark for the historical baseline
     Designed to be rendered one per class on the simulator's classifier panel
@@ -49,11 +49,11 @@ def horizontal_probability_bar(probability: float, baseline: Optional[float] = N
             type="line",
             x0=baseline,
             x1=baseline,
-            y0=-0.15,
-            y1=1.15,
+            y0=-0.2,
+            y1=1.2,
             xref="x",
             yref="y",
-            line=dict(color="#000000", width=2)
+            line=dict(color="#000000", width=3)
         )
 
     # Invisible scatter trace to hold the hover tooltip
@@ -92,7 +92,7 @@ def horizontal_probability_bar(probability: float, baseline: Optional[float] = N
     fig.update_layout(
         barmode="stack",
         height=height,
-        margin=dict(l=0, r=0, t=4, b=60),
+        margin=dict(l=0, r=0, t=4, b=10),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         showlegend=True,
@@ -290,7 +290,7 @@ def time_trend_counts(
             y=counts[class_label].tolist(),
             mode="lines+markers",
             name=class_label,
-            line=dict(color=_PER_CLASS_COLOURS.get(class_label, "#888888"), width=2),
+            line=dict(color=_PER_CLASS_COLOURS.get(class_label, "#888888"), width=3),
             marker=dict(size=6),
             hovertemplate=f"<b>{class_label}</b><br>%{{x}}<br>%{{y:,}} breaches<extra></extra>"
         ))
@@ -338,7 +338,7 @@ def time_trend_proportions(
             y=proportions[class_label].tolist(),
             mode="lines+markers",
             name=class_label,
-            line=dict(color=_PER_CLASS_COLOURS.get(class_label, "#888888"), width=2),
+            line=dict(color=_PER_CLASS_COLOURS.get(class_label, "#888888"), width=3),
             marker=dict(size=6),
             hovertemplate=f"<b>{class_label}</b><br>%{{x}}<br>%{{y:.1%}} of quarter<extra></extra>"
         ))

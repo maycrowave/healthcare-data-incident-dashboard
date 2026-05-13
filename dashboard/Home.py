@@ -5,9 +5,6 @@ from dashboard.components.header import render_header
 from dashboard.components.disclaimer import render_disclaimer
 
 import streamlit as st
-import pandas as pd
-import numpy as np
-from src.constants import (PROCESSED_DATA_PATH)
 
 st.set_page_config(
     page_title="UK Healthcare Data Breach Outcome Simulator",
@@ -24,15 +21,11 @@ st.set_page_config(
 def main () -> None:
     render_header(
         title="UK Healthcare Data Breach Outcome Simulator",
-        subtitle=(
-            "Explore predicted regulatory outcomes for hypothetical UK healthcare "
-            "data breaches, using the Information Commissioner's Office (ICO) "
-            "Data Security Incident Trends dataset."
-        ),
+        subtitle=("Explore predicted regulatory outcomes for hypothetical UK healthcare data breaches, using the Information Commissioner's Office (ICO) Data Security Incident Trends dataset.")
     )
     render_disclaimer()
     
-    st.markdown("""### Where to go from here""")
+    st.markdown("""### Where to go from here""", text_alignment="center")
     nav_col1, nav_col2, nav_col3 = st.columns(3)
     
     with nav_col1:

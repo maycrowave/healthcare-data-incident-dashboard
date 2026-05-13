@@ -23,7 +23,7 @@ def _load_markdown(filename: str) -> str:
     """Load a markdown file from dashboard/content/"""
     path = CONTENT_PATH / filename
     if not path.exists():
-        return f"_Content file missing: {filename}_"
+        return f"Content file missing: {filename}"
     return path.read_text(encoding="utf-8")
 
 
@@ -46,8 +46,8 @@ def main() -> None:
         It explores whether regulatory decision outcomes for UK healthcare data breaches can be modelled from the publicly available {DATA_SOURCE_NAME} dataset.
 
         The dashboard offers two main capabilities.
-        The **Simulator** lets users describe a hypothetical breach and see the model's predicted probability of each regulatory outcome, alongside historical baseline rates and the cluster of similar past breaches.
-        The **Explore** screen presents descriptive views of the underlying training data so people can see what the model has learned from.
+        - The **Simulator** lets users describe a hypothetical breach and see the model's predicted probability of each regulatory outcome, alongside historical baseline rates and the cluster of similar past breaches.
+        - The **Explore** screen presents descriptive views of the underlying training data so people can see what the model has learned from.
         """
     )
 
@@ -68,7 +68,8 @@ def main() -> None:
         The Simulator's outcome prediction comes from a **gradient-boosted tree classifier** ({classifier_meta.get("selected_model", "CatBoost")}) trained on labelled past breaches in the {DATA_SOURCE_NAME} dataset.
         The model takes the breach characteristics you provide as input and outputs a probability for each of the three decision taken outcomes.
 
-        The model was trained on data from {TRAINING_DATA_RANGE} and evaluated on a held-out test set from a later time period.
+        The model was trained on data from {TRAINING_DATA_RANGE} and evaluated on a held-out test set from a later date.
+        
         Main test-set performance:
         """
     )

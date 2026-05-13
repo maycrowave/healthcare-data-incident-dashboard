@@ -8,11 +8,9 @@ class ExploreFilter(NamedTuple):
     years: List[int]
     quarters: List[str]
 
-
 def render_filter(df: pd.DataFrame) -> ExploreFilter:
     """
     Render the year/ quarter filter and return the selection
-
     Defaults to all years and all quarters selected
     """
     all_years = sorted(df["year"].unique().tolist())
@@ -34,12 +32,10 @@ def render_filter(df: pd.DataFrame) -> ExploreFilter:
                 default=all_quarters,
                 placeholder="Select one or more quarters"
             )
-
     return ExploreFilter(
         years=selected_years or all_years,
         quarters=selected_quarters or all_quarters,
     )
-
 
 def apply_filter(df: pd.DataFrame, selection: ExploreFilter) -> pd.DataFrame:
     """Apply the filter selection to a dataframe"""

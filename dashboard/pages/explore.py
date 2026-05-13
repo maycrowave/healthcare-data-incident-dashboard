@@ -31,9 +31,6 @@ _MULTILABEL_COLS = {"data_subject_type", "data_type"}
 def _explode_multilabel(df: pd.DataFrame, col: str) -> pd.DataFrame:
     """
     Split a comma-separated multilabel column into individual rows
-
-    A breach with data_subject_type=Patients, Employees becomes two rows in the returned dataframe with one tagged as Patients, one tagged as Employees
-    Other columns are duplicated
     """
     exploded = df.copy()
     exploded[col] = exploded[col].astype(str).str.split(", ")
@@ -159,8 +156,7 @@ def main() -> None:
     # Breaches over time
     st.subheader("Breaches over time")
     st.caption(
-        "How the volume and decision mix of reported breaches has changed "
-        "across the training period."
+        "How the volume and decision mix of reported breaches has changed across the training period."
     )
 
     df_time = _attach_period(df)
