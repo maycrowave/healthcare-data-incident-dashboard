@@ -5,7 +5,7 @@
   "n_features": 59,
   "n_rows": 9250,
   "n_init_grid": 20,
-  "n_init_final": 50,
+  "n_init_final": 40,
   "random_state": 42,
   "ari": 0.0357,
   "nmi": 0.0454,
