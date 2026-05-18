@@ -1,0 +1,15 @@
+streamlit
+pandas
+matplotlib
+numpy
+scikit-learn
+sys
+typing
+pathlib
+json
+pickle
+catboost
+pytest
+unittest
+time
+plotly
