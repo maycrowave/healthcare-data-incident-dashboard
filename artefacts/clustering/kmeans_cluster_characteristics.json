@@ -1,0 +1,273 @@
+{
+  "0": {
+    "size": 1679,
+    "percentage_of_dataset": 18.2,
+    "outcome_distribution": {
+      "Informal Action Taken": 91.7,
+      "Investigation Pursued": 3.6,
+      "No Further Action": 4.7
+    },
+    "top_features": {
+      "data_subject_type": {
+        "Patients": 62.4,
+        "Unknown": 8.6,
+        "Employees": 7.4
+      },
+      "data_type": {
+        "Basic personal identifiers, Health data": 54.6,
+        "Basic personal identifiers": 22.5,
+        "Health data": 11.5
+      },
+      "incident_category": {
+        "Non Cyber": 99.9,
+        "Cyber": 0.1
+      },
+      "incident_type": {
+        "Data emailed to incorrect recipient": 24.7,
+        "Other non-cyber incident": 21.7,
+        "Unauthorised access": 13.2
+      },
+      "no_data_subjects_affected": {
+        "1 to 9": 78.9,
+        "10 to 99": 10.2,
+        "100 to 1k": 5.5
+      },
+      "time_taken_to_report": {
+        "Less than 24 hours": 100.0
+      }
+    }
+  },
+  "1": {
+    "size": 847,
+    "percentage_of_dataset": 9.2,
+    "outcome_distribution": {
+      "Informal Action Taken": 77.4,
+      "Investigation Pursued": 6.3,
+      "No Further Action": 16.3
+    },
+    "top_features": {
+      "data_subject_type": {
+        "Patients": 50.5,
+        "Unknown": 14.6,
+        "Employees": 12.6
+      },
+      "data_type": {
+        "Unknown": 99.9,
+        "Criminal convictions or offences": 0.1
+      },
+      "incident_category": {
+        "Non Cyber": 99.5,
+        "Cyber": 0.5
+      },
+      "incident_type": {
+        "Other non-cyber incident": 29.3,
+        "Unauthorised access": 17.7,
+        "Data emailed to incorrect recipient": 10.7
+      },
+      "no_data_subjects_affected": {
+        "1 to 9": 73.3,
+        "10 to 99": 9.9,
+        "1k to 10k": 6.1
+      },
+      "time_taken_to_report": {
+        "24 hours to 72 hours": 35.3,
+        "More than 1 week": 24.2,
+        "72 hours to 1 week": 23.6
+      }
+    }
+  },
+  "2": {
+    "size": 661,
+    "percentage_of_dataset": 7.1,
+    "outcome_distribution": {
+      "Informal Action Taken": 66.3,
+      "Investigation Pursued": 9.2,
+      "No Further Action": 24.5
+    },
+    "top_features": {
+      "data_subject_type": {
+        "Unknown": 95.9,
+        "Patients": 1.2,
+        "Users": 0.6
+      },
+      "data_type": {
+        "Unknown": 96.2,
+        "Basic personal identifiers": 2.1,
+        "Health data": 0.8
+      },
+      "incident_category": {
+        "Non Cyber": 71.4,
+        "Cyber": 28.6
+      },
+      "incident_type": {
+        "Other non-cyber incident": 20.0,
+        "Unauthorised access": 13.0,
+        "Other cyber incident": 11.2
+      },
+      "no_data_subjects_affected": {
+        "Unknown": 75.5,
+        "1 to 9": 7.9,
+        "100 to 1k": 6.2
+      },
+      "time_taken_to_report": {
+        "Less than 24 hours": 67.6,
+        "24 hours to 72 hours": 12.7,
+        "More than 1 week": 11.5
+      }
+    }
+  },
+  "3": {
+    "size": 2353,
+    "percentage_of_dataset": 25.4,
+    "outcome_distribution": {
+      "Informal Action Taken": 90.2,
+      "Investigation Pursued": 5.7,
+      "No Further Action": 4.1
+    },
+    "top_features": {
+      "data_subject_type": {
+        "Patients": 59.8,
+        "Employees": 8.1,
+        "Unknown": 8.0
+      },
+      "data_type": {
+        "Basic personal identifiers, Health data": 53.8,
+        "Basic personal identifiers": 20.5,
+        "Health data": 12.0
+      },
+      "incident_category": {
+        "Non Cyber": 99.9,
+        "Cyber": 0.1
+      },
+      "incident_type": {
+        "Data emailed to incorrect recipient": 19.9,
+        "Other non-cyber incident": 19.2,
+        "Unauthorised access": 16.3
+      },
+      "no_data_subjects_affected": {
+        "1 to 9": 70.8,
+        "10 to 99": 12.6,
+        "100 to 1k": 8.1
+      },
+      "time_taken_to_report": {
+        "24 hours to 72 hours": 100.0
+      }
+    }
+  },
+  "4": {
+    "size": 1667,
+    "percentage_of_dataset": 18.0,
+    "outcome_distribution": {
+      "Informal Action Taken": 86.3,
+      "Investigation Pursued": 8.1,
+      "No Further Action": 5.6
+    },
+    "top_features": {
+      "data_subject_type": {
+        "Patients": 62.3,
+        "Unknown": 8.9,
+        "Employees": 8.9
+      },
+      "data_type": {
+        "Basic personal identifiers, Health data": 55.7,
+        "Basic personal identifiers": 16.3,
+        "Health data": 14.6
+      },
+      "incident_category": {
+        "Non Cyber": 99.6,
+        "Cyber": 0.4
+      },
+      "incident_type": {
+        "Unauthorised access": 23.8,
+        "Other non-cyber incident": 20.3,
+        "Data emailed to incorrect recipient": 14.2
+      },
+      "no_data_subjects_affected": {
+        "1 to 9": 76.5,
+        "10 to 99": 11.4,
+        "100 to 1k": 4.9
+      },
+      "time_taken_to_report": {
+        "More than 1 week": 100.0
+      }
+    }
+  },
+  "5": {
+    "size": 737,
+    "percentage_of_dataset": 8.0,
+    "outcome_distribution": {
+      "Informal Action Taken": 47.9,
+      "Investigation Pursued": 8.8,
+      "No Further Action": 43.3
+    },
+    "top_features": {
+      "data_subject_type": {
+        "Patients": 24.8,
+        "Employees": 18.7,
+        "Unknown": 6.6
+      },
+      "data_type": {
+        "Basic personal identifiers, Health data": 26.2,
+        "Basic personal identifiers": 20.4,
+        "Unknown": 10.9
+      },
+      "incident_category": {
+        "Cyber": 99.9,
+        "Non Cyber": 0.1
+      },
+      "incident_type": {
+        "Phishing": 35.0,
+        "Ransomware": 29.6,
+        "Other cyber incident": 17.6
+      },
+      "no_data_subjects_affected": {
+        "100 to 1k": 27.8,
+        "Unknown": 21.0,
+        "10 to 99": 16.1
+      },
+      "time_taken_to_report": {
+        "24 hours to 72 hours": 41.0,
+        "Less than 24 hours": 21.2,
+        "More than 1 week": 19.5
+      }
+    }
+  },
+  "6": {
+    "size": 1306,
+    "percentage_of_dataset": 14.1,
+    "outcome_distribution": {
+      "Informal Action Taken": 86.0,
+      "Investigation Pursued": 6.8,
+      "No Further Action": 7.2
+    },
+    "top_features": {
+      "data_subject_type": {
+        "Patients": 57.1,
+        "Unknown": 9.3,
+        "Employees": 8.3
+      },
+      "data_type": {
+        "Basic personal identifiers, Health data": 56.7,
+        "Basic personal identifiers": 18.5,
+        "Health data": 11.9
+      },
+      "incident_category": {
+        "Non Cyber": 99.9,
+        "Cyber": 0.1
+      },
+      "incident_type": {
+        "Other non-cyber incident": 17.7,
+        "Data emailed to incorrect recipient": 17.1,
+        "Unauthorised access": 16.5
+      },
+      "no_data_subjects_affected": {
+        "1 to 9": 70.4,
+        "10 to 99": 12.7,
+        "Unknown": 5.9
+      },
+      "time_taken_to_report": {
+        "72 hours to 1 week": 100.0
+      }
+    }
+  }
+}

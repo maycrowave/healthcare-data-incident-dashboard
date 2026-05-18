@@ -1,0 +1,16 @@
+{
+  "model": "KMeans MLB+OHE",
+  "feature_representation": "OHE categorical columns + MLB multi-valued columns",
+  "k": 7,
+  "n_features": 59,
+  "n_rows": 9250,
+  "n_init_grid": 20,
+  "n_init_final": 40,
+  "random_state": 42,
+  "ari": 0.0357,
+  "nmi": 0.0454,
+  "silhouette_euclidean": 0.1556,
+  "inertia": 24187.62,
+  "best_silhouette_k_from_search": 7,
+  "best_silhouette_score_from_search": 0.1556
+}

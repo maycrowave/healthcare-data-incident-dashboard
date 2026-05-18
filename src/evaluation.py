@@ -14,7 +14,7 @@ from sklearn.metrics import (
     roc_auc_score,
     average_precision_score,
     log_loss,
-    ConfusionMatrixDisplay,
+    ConfusionMatrixDisplay
 )
 from sklearn.ensemble import RandomForestClassifier
 from catboost import CatBoostClassifier
@@ -47,9 +47,9 @@ def evaluate_classification_model(
     X_eval: pd.DataFrame,
     y_eval: pd.Series,
     class_labels: List[str] = CLASS_LABELS,
-    show_plot: bool = True,
+    show_plot: bool = True
 ) -> Dict[str, Any]:
-    """Evaluate a classification model using various metrics and visualizations."""
+    """Evaluate a classification model using various metrics and visualisations"""
     
     print(f"Evaluating {model_name}\n")
     
@@ -63,7 +63,7 @@ def evaluate_classification_model(
     probs_class_order = list(model.classes_)
     probs_alignment = np.column_stack([y_probs[:, probs_class_order.index(c)] for c in class_labels])
     
-    # Convert y_eval to binary format for multi-class ROC AUC and PR AUC calculations
+    # Convert y_eval to binary format for multi-class roc auc and pr auc calculations
     y_true_binary = np.zeros((len(y_eval), len(class_labels)), dtype=int)
     for i, label in enumerate(class_labels):
         y_true_binary[:, i] = (y_eval == label).astype(int)
@@ -74,7 +74,7 @@ def evaluate_classification_model(
     macro_precision = precision_score(y_eval, y_pred, average='macro', zero_division=0)
     macro_recall = recall_score(y_eval, y_pred, average='macro', zero_division=0)
     
-    # Handle cases where ROC AUC or PR AUC cannot be calculated due to a lack of positive samples
+    # Handle cases where roc auc or pr auc cannot be calculated due to a lack of positive samples
     try:
         macro_roc_auc = roc_auc_score(y_true_binary, probs_alignment, average='macro', multi_class='ovr')
     except ValueError:
@@ -88,7 +88,7 @@ def evaluate_classification_model(
     except ValueError:
         logloss = float('nan')
         
-    # Calculate per-class F1 scores and ROC AUC
+    # Calculate per-class F1 scores and roc auc scores
     per_class_f1 = f1_score(y_eval, y_pred, labels=class_labels, average=None, zero_division=0)
     per_class_roc_auc = []
     for i, label in enumerate(class_labels):
@@ -97,7 +97,8 @@ def evaluate_classification_model(
         except ValueError:
             auc = float('nan')
         per_class_roc_auc.append(auc)
-        
+    
+    # Calculate per-class Brier scores
     per_class_brier = []
     for i, label in enumerate(class_labels):
         y_true_class = (y_eval == label).astype(int)
@@ -144,7 +145,7 @@ def evaluate_classification_model(
         "macro_recall": macro_recall,
         "macro_roc_auc": macro_roc_auc,
         "macro_pr_auc": macro_pr_auc,
-        "log_loss": logloss,
+        "log_loss": logloss
     }
     
     # Add per-class metrics to the result dict
@@ -164,10 +165,11 @@ def fit_catboost_classifier(
     class_labels: List[str] = CLASS_LABELS,
     cat_feature_indices: Optional[List[int]] = None,
     class_weights: Optional[Union[str, Dict[str, float]]] = None,
-    hyperparameters: Optional[Dict[str, Any]] = None,
+    hyperparameters: Optional[Dict[str, Any]] = None
 ) -> Tuple[CatBoostClassifier, Dict[str, Any]]:
-    """Fit a CatBoostClassifier and evaluate it on the test set."""
+    """Fit a CatBoost Classifier and evaluate it on the test set"""
     
+    # Set up the model hyperparameters, including categorical feature indices and class weights if specified
     kwargs = DEFAULT_CATBOOST_HYPERPARAMS.copy()
     if hyperparameters is not None:
         kwargs.update(hyperparameters) 
@@ -201,8 +203,9 @@ def fit_random_forest_classifier(
     class_weights: Optional[Union[str, Dict[str, float]]] = None,
     hyperparameters: Optional[Dict[str, Any]] = None,
 ) -> Tuple[RandomForestClassifier, Dict[str, Any]]:
-    """Fit a RandomForestClassifier and evaluate it on the test set."""
+    """Fit a Random Forest Classifier and evaluate it on the test set"""
     
+    # Set up the model hyperparameters, including class weights if specified
     kwargs = DEFAULT_RF_HYPERPARAMS.copy()
     if class_weights is None:
         kwargs["class_weight"] = None
@@ -228,7 +231,7 @@ def compare_results_table(
     class_labels: List[str] = CLASS_LABELS,
     print_table: bool = True
 ) -> pd.DataFrame:
-    """Compare evaluation results from multiple models in a single table."""
+    """Compare evaluation results from multiple models in a single table"""
     
     results_df = pd.DataFrame(results_list)
     col_headings = ["model", "accuracy", "macro_f1", "macro_precision", "macro_recall", "macro_roc_auc", "macro_pr_auc", "log_loss"]
@@ -242,7 +245,7 @@ def compare_results_table(
         
         print("Ranked by macro ROC-AUC:")
         print(results_df[col_headings].sort_values(by="macro_roc_auc", ascending=False).to_string(index=False))
-        
+
         print("Ranked by Log Loss:")
         print(results_df[col_headings].sort_values(by="log_loss", ascending=True).to_string(index=False))
         

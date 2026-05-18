@@ -1,0 +1,8 @@
+{
+  "model_type": "catboost",
+  "model_file": "catboost_final.cbm",
+  "feature_representation": "native_cat_mlb",
+  "uses_ohe": false,
+  "uses_cat_features": true,
+  "selected_model": "CatBoost Tuned No Weights MLB + CAT"
+}
