@@ -1,8 +1,5 @@
-import sys
-sys.path.append("..")
-
-from dashboard.components.header import render_header
-from dashboard.components.disclaimer import render_disclaimer
+from components.header import render_header
+from components.disclaimer import render_disclaimer
 
 import streamlit as st
 

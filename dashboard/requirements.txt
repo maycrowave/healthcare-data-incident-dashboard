@@ -3,7 +3,6 @@ pandas
 matplotlib
 numpy
 scikit-learn
-sys
 typing
 pathlib
 json
@@ -13,3 +12,4 @@ pytest
 unittest
 time
 plotly
+-e .
