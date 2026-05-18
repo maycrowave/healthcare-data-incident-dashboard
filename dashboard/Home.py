@@ -1,9 +1,7 @@
 from components.header import render_header
 from components.disclaimer import render_disclaimer
-from pathlib import Path
 
 import streamlit as st
-HOME_DIR = Path(__file__).parent
 
 st.set_page_config(
     page_title="UK Healthcare Data Breach Outcome Simulator",
@@ -31,19 +29,19 @@ def main () -> None:
         with st.container(border=True):
             st.markdown("#### About", text_alignment="center")
             st.caption("Methodology, limitations, and the regulatory decision glossary.", text_alignment="center")
-            st.page_link(str(HOME_DIR / "pages/About.py"), label="See About the Dashboard ->", use_container_width=True)
+            st.page_link("..pages/About.py", label="See About the Dashboard ->", use_container_width=True)
         
     with nav_col2:
         with st.container(border=True):
             st.markdown("#### Explore", text_alignment="center")
             st.caption("Browse the historical breach data the model is trained on.", text_alignment="center")
-            st.page_link(str(HOME_DIR / "pages/Explore.py"), label="Explore the Data ->", use_container_width=True)
+            st.page_link("..pages/Explore.py", label="Explore the Data ->", use_container_width=True)
             
     with nav_col3:
         with st.container(border=True):
             st.markdown("#### Simulator", text_alignment="center")
             st.caption("Describe a hypothetical breach and see predicted regulatory outcomes.", text_alignment="center")
-            st.page_link(str(HOME_DIR / "pages/Simulator.py"), label="Simulate a Breach ->", use_container_width=True)
+            st.page_link("..pages/Simulator.py", label="Simulate a Breach ->", use_container_width=True)
 
 if __name__ == "__main__":
     main()
