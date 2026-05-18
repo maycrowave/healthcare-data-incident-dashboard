@@ -29,19 +29,19 @@ def main () -> None:
         with st.container(border=True):
             st.markdown("#### About", text_alignment="center")
             st.caption("Methodology, limitations, and the regulatory decision glossary.", text_alignment="center")
-            st.page_link("About.py", label="See About the Dashboard ->", use_container_width=True)
+            st.page_link("pages/About.py", label="See About the Dashboard ->", use_container_width=True)
         
     with nav_col2:
         with st.container(border=True):
             st.markdown("#### Explore", text_alignment="center")
             st.caption("Browse the historical breach data the model is trained on.", text_alignment="center")
-            st.page_link("Explore.py", label="Explore the Data ->", use_container_width=True)
+            st.page_link("pages/Explore.py", label="Explore the Data ->", use_container_width=True)
             
     with nav_col3:
         with st.container(border=True):
             st.markdown("#### Simulator", text_alignment="center")
             st.caption("Describe a hypothetical breach and see predicted regulatory outcomes.", text_alignment="center")
-            st.page_link("Simulator.py", label="Simulate a Breach ->", use_container_width=True)
+            st.page_link("pages/Simulator.py", label="Simulate a Breach ->", use_container_width=True)
 
 if __name__ == "__main__":
     main()
