@@ -3,13 +3,6 @@ pandas
 matplotlib
 numpy
 scikit-learn
-typing
-pathlib
-json
-pickle
 catboost
-pytest
-unittest
-time
 plotly
 -e .
